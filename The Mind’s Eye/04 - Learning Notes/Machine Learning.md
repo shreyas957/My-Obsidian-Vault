@@ -1642,7 +1642,6 @@ In RL, the agent interacts with its environment and improves its performance bas
 ### **Basic Framework of Reinforcement Learning in Autonomous Driving:**
 
 1. **Agent:**
-    
     - The **agent** in this context is the **self-driving car** itself. The car's autonomous driving system is responsible for making decisions, such as steering, accelerating, and braking, based on its observations of the environment.
 2. **Environment:**
     
