@@ -1,11 +1,11 @@
 2024-12-15 12:17
 
-Status: ongoing
+Status: complete
 
-Tags: 
+Tags: [[POSTGRESQL]] [[DBMS]]
 
 
-# PostgreSQL
+# PostgreSQL Complete Notes
 
 ##### Why? 
 1. Adheres to SQL Standards
@@ -893,11 +893,11 @@ e.g.
 CREATE OR REPLACE FUNCTION fn_add_ints(int, int)
 RETURNS int AS
 'SELECT $1 + $2;'
-LANGUAGE SQL
+LANGUAGE SQL;
 -- with $ sign we can access passed parameters to function.
 -- use above function
 SELECT fn_add_ints(4,5);
-
+DROP fn_add_ints
 --
 
 -- sometimes we need to use '' inside our sql so to define body of function we can use $body$
@@ -906,7 +906,7 @@ RETURNS int AS
 $body$
 SELECT $1 + $2;
 $body$
-LANGUAGE SQL  -- for SQL we dont have BEGIN and END
+LANGUAGE SQL;  -- for SQL we dont have BEGIN and END
 ```
 
 ```sql
@@ -917,7 +917,7 @@ $$
 BEGIN
   RETURN first_name || ' ' || last_name; 
   -- can not use SELECT, instead RETURN for plpgsql
-END;
+END;   -- ; is not complusory
 $$ 
 LANGUAGE plpgsql;  -- PL/pgSQL
 -- use 
@@ -1011,14 +1011,14 @@ LANGUAGE plpgsql
 
 SELECT get_random_value(1, 50);
 ```
-- Store rows in variables using `record` type
+- Store rows in variables using `RECORD` type
 ```sql
 CREATE OR REPLACE get_random_employee()
 RETURN varchar AS
 $$
 DECLARE
 	rand int,
-	emp record;
+	emp RECORD;
 BEGIN
 	SELECT random()*(5-1) + 1 INTO rand;
 	SELECT * FROM employee INTO emp WHERE id = rand;
@@ -1089,16 +1089,548 @@ END;
 $$
 LANGUAGE plpgsql
 ```
+- Loops in functions can be used to iterate over rows, numbers, or custom logic
+```sql
+-- Loop with Exit Condition
+CREATE OR REPLACE FUNCTION fn_loop_with_exit_condition(max_num int)
+RETURN int AS
+$$
+DECLARE
+	j int DEFAULT 1;
+	total_sum int DEFAULT 0;
+BEGIN
+	LOOP
+		total_sum := total_sum + j;
+		j := j + 1;
+		EXIT WHEN j > max_num
+	END LOOP;
+	RETURN total_sum
+END;
+$$
+LANGUAGE plpgsql
+```
+
+```sql
+-- FOR LOOP SYNTAX
+FOR counter_name IN start_value .. end_value BY stepping
+LOOP
+	-- statements
+END LOOP;
+
+-- example
+CREATE OR REPLACE FUNCTION fn_for_loop(max_num int)
+RETURNS int AS
+$$
+DECLARE
+	total_sum int DEFAULT 0;
+BEGIN
+	FOR i IN 1 .. max_num BY 1     -- increment i by 1
+	LOOP
+		total_sum := total_sum + i;
+	END LOOP;
+	RETURN total_sum;
+END;
+$$
+LANGUAGE plpgsql
+
+--
+
+CREATE OR REPLACE FUNCTION fn_for_loop(max_num int)
+AS
+$$
+BEGIN
+	FOR i IN REVERSE max_num .. 1 BY 1     -- decrement i by 1
+	LOOP
+		RAISE NOTICE 'Number: %', i;
+	END LOOP;
+END;
+$$
+LANGUAGE plpgsql
+
+--
+-- loop over rows returned by a query using the `FOR` loop.
+CREATE OR REPLACE FUNCTION loop_employees()
+RETURNS VOID 
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    emp RECORD;
+BEGIN
+    FOR emp IN SELECT id, name FROM employees 
+    LOOP
+        RAISE NOTICE 'Employee: ID = %, Name = %', emp.id, emp.name;
+    END LOOP;
+END;
+$$;
+```
+
+- `RAISE NOTICE` is acting as print statement.
+- `DO` Block allow us to write procedural language (pl/pgSQL) without using functions.
+```sql
+DO
+$$
+DECLARE
+	-- variables
+BEGIN
+	-- statements
+END;
+$$ LANGUAGE plpgsql
+```
+- Arrays in postgreSQL 
+```sql
+SELECT ARRAY[1, 2, 3, 4];  -- Creates a one-dimensional array
+SELECT ARRAY[]::INT[];  -- Creates an empty array of integers
+```
+
+```sql
+-- FOREACH Loop
+DO
+$$
+DECLARE
+	arr int[] := ARRAY[1,2,3];
+	i int;
+BEGIN
+	FOREACH i IN ARRAY arr
+	LOOP
+		RAISE NOTICE '%', i;
+	END LOOP;
+END;
+$$ LANGUAGE plpgsql
+```
+
+```sql
+-- WHILE LOOP
+DO
+$$
+DECLARE
+	counter int DEFAULT 1;
+	sum int DEFAULT 0;
+BEGIN
+	WHILE j <= 10
+	LOOP
+		sum := sum + j;
+		j := j + 1;
+	END LOOP;
+	RAISE NOTICE 'Sum = %', sum;
+END;
+$$ LANGUAGE plpgsql
+```
+
+```sql
+-- CONTINUE and EXIT
+DO
+$$
+DECLARE
+	i INT DEFAULT 1;
+BEGIN
+	LOOP
+		i := i+1;
+		EXIT WHEN i > 10;
+		CONTINUE WHEN MOD(i, 2) = 0;
+		RAISE NOTICE '%', i;
+	END LOOP;
+END;
+$$ LANGUAGE plpgsql
+
+--
+DO
+$$ 
+DECLARE 
+	counter INT := 1; 
+BEGIN 
+	LOOP 
+		RAISE NOTICE 'Counter: %', counter; 
+		counter := counter + 1; 
+		-- Exit condition 
+		IF counter > 5 THEN 
+			EXIT; 
+		END IF; 
+	END LOOP; 
+END; 
+$$ LANGUAGE plpgsql;
+```
+- Function overloading means you can define multiple functions with the same name but different argument types. PostgreSQL distinguishes them based on the number or types of arguments.
+```sql
+CREATE FUNCTION multiply(a INT, b INT)
+RETURNS INT AS $$
+BEGIN
+  RETURN a * b;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE FUNCTION multiply(a FLOAT, b FLOAT)
+RETURNS FLOAT AS $$
+BEGIN
+  RETURN a * b;
+END;
+$$ LANGUAGE plpgsql;
+```
+- `DROP FUNCTION` to delete
+	**If multiple overloads exist**: You must specify the parameter types to delete the specific version of the function.
+```sql
+DROP FUNCTION function_name;  -- if no parameters
+DROP FUNCTION IF EXISTS function_name(TEXT, TEXT, TEXT);
+```
+
+### 22. Stored Procedures :
+A **stored procedure** in PostgreSQL is a precompiled set of SQL and procedural logic that is stored in the database and can be executed by name. It allows expanding the capabilities of functions by allowing transaction control (e.g., `COMMIT` or `ROLLBACK`).
+- Key Features :
+	1. They can be executed by the application, which has access to database.
+	2. Procedures can execute transactions(`COMMIT` and `ROLLBACK`) within the procedure body.
+	3. Procedures can't be called by `SELECT`.
+	4. They do not return any value, but there is workaround. But we can use `return;` in procedure to exit it. 
+	1. Reusability - Procedures are stored in the database and can be reused to avoid repetitive code.
+	2. Procedures can accept input, output, or input-output parameters.
+	3. Procedures can be executed with the privileges of the owner or caller.
+	4. Procedure without any parameters is called _static_ procedure and with parameters is called _dynamic_ procedure.
+- Synopsis :
+```sql
+CREATE [ OR REPLACE ] PROCEDURE
+    _`name`_ ( [ [ _`argmode`_ ] [ _`argname`_ ] _`argtype`_ [ { DEFAULT | = } _`default_expr`_ ] [, ...] ] )
+  { LANGUAGE _`lang_name`_
+    | TRANSFORM { FOR TYPE _`type_name`_ } [, ... ]
+    | [ EXTERNAL ] SECURITY INVOKER | [ EXTERNAL ] SECURITY DEFINER
+    | SET _`configuration_parameter`_ { TO _`value`_ | = _`value`_ | FROM CURRENT }
+    | AS '_`definition`_'
+    | AS '_`obj_file`_', '_`link_symbol`_'
+    | _`sql_body`_
+  } ...
+
+-- 
+
+CREATE [ OR REPLACE ] PROCEDURE procedure_name ( [ argument_name data_type [ IN | OUT | INOUT ] [, ...] ] )
+LANGUAGE language_name
+AS $$
+DECLARE
+	-- variables 
+BEGIN
+    -- Procedure Body
+END;
+$$;
+```
+
+e.g.
+```sql
+CREATE OR REPLACE PROCEDURE add_employee(emp_name TEXT, emp_salary NUMERIC)
+LANGUAGE plpgsql   -- the language sec. can be added in last like function
+AS $$
+BEGIN
+    INSERT INTO employees (name, salary)
+    VALUES (emp_name, emp_salary);
+    COMMIT;  -- not complusory 
+END;
+$$;
+
+--
+CALL add_employee('John Doe', 50000);   -- execution 
+```
+
+- Using transaction control in procedure :
+```sql
+CREATE OR REPLACE PROCEDURE update_employee_salary(emp_id INT, new_salary NUMERIC)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    BEGIN
+        UPDATE employees
+        SET salary = new_salary
+        WHERE id = emp_id;
+        -- Commit the transaction if the update succeeds
+        COMMIT;
+    EXCEPTION WHEN OTHERS THEN
+        -- Rollback the transaction if an error occurs
+        ROLLBACK;
+        RAISE NOTICE 'Error occurred during update.';
+    END;
+END;
+$$;
+```
+
+- `IN`, `INOUT`, `OUT` in procedure example :
+```sql
+CREATE OR REPLACE PROCEDURE manage_employee_salary(
+    emp_id INT,                  
+     -- IN parameter (employee ID)
+    INOUT salary_adjustment NUMERIC, 
+    -- INOUT parameter (adjustment to salary)
+    OUT total_count INT           
+    -- OUT parameter (total number of employees)
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    -- Update the employee salary based on the INOUT parameter
+    UPDATE employees
+    SET salary = salary + salary_adjustment
+    WHERE id = emp_id;
+
+    -- Return the new salary via the INOUT parameter
+    SELECT salary INTO salary_adjustment
+    FROM employees
+    WHERE id = emp_id;
+
+    -- Calculate the total number of employees and return it via the OUT parameter
+    SELECT COUNT(*) INTO total_count
+    FROM employees;
+END;
+$$;
+
+-- calling procedure
+CALL manage_employee_salary(1, 2000, total_count);
+```
+
+- Calling procedure :
+```sql
+CALL procedure_name(parameter1, parameter2, ...);
+```
+
+- Note :
+	To replace the current definition of an existing procedure, use `CREATE OR REPLACE PROCEDURE`. It is not possible to change the name or argument types of a procedure this way (if you tried, you would actually be creating a new, distinct procedure).
+
+	When `CREATE OR REPLACE PROCEDURE` is used to replace an existing procedure, the ownership and permissions of the procedure do not change. All other procedure properties are assigned the values specified or implied in the command. You must own the procedure to replace it (this includes being a member of the owning role).
+	
+- Difference Between procedure and functions :
+
+|**Aspect**|**Function**|**Procedure**|
+|---|---|---|
+|Transaction Control|Cannot include `COMMIT` or `ROLLBACK`.|Supports `COMMIT` and `ROLLBACK`.|
+|Returns Values|Returns a single value or table using `RETURN`.|Uses `OUT` or `INOUT` parameters for output.|
+|Invocation|Called in a `SELECT`, `FROM`, or other SQL context.|Called with `CALL`.|
+|Use Case|Best for computations and transformations.|Best for performing database operations.|
+
+### 23. Triggers :
+ - A **trigger** in PostgreSQL is a special kind of stored procedure that is automatically executed (or "fired") in response to specific events on a table, foreign table or view. Triggers allow you to define custom actions that are executed when certain changes occur in the database, such as inserting, updating, or deleting data.
+ - They can be executed _before_, _after_ and _instead_ of an event.
+ - We can have multiple triggers and they will be executed on alphabetical order for that table, foreign table or view.
+ - Can't be triggered manually by user.
+ - Do not accept any parameters.
+![[Triggers in postgres.png]]
+
+- `ROW`: The trigger is fired for each row affected by the operation.
+- `STATEMENT`: The trigger is fired once for the entire SQL statement, regardless of how many rows are affected.
+
+- Synopsis :
+```sql
+CREATE [ OR REPLACE ] [ CONSTRAINT ] TRIGGER _`name`_ { BEFORE | AFTER | INSTEAD OF } { _`event`_ [ OR ... ] }
+    ON _`table_name`_
+    [ FROM _`referenced_table_name`_ ]
+    [ NOT DEFERRABLE | [ DEFERRABLE ] [ INITIALLY IMMEDIATE | INITIALLY DEFERRED ] ]
+    [ REFERENCING { { OLD | NEW } TABLE [ AS ] _`transition_relation_name`_ } [ ... ] ]
+    [ FOR [ EACH ] { ROW | STATEMENT } ]
+    [ WHEN ( _`condition`_ ) ]
+    EXECUTE { FUNCTION | PROCEDURE } _`function_name`_ ( _`arguments`_ )
+
+where _`event`_ can be one of:
+
+    INSERT
+    UPDATE [ OF _`column_name`_ [, ... ] ]
+    DELETE
+    TRUNCATE
+
+--
+
+CREATE TRIGGER trigger_name
+	{BEFORE | AFTER} {event}  -- Event : insert, update, delete, truncate
+ON table_name
+	[FOR [EACH] {ROW | STATEMENT}]
+		EXECUTE {PROCEDURE | FUNCTION}  
+```
+
+e.g.
+```sql
+CREATE TABLE employees (
+    id SERIAL PRIMARY KEY,  
+    name VARCHAR(100),        
+    salary NUMERIC NOT NULL,
+    department VARCHAR(50),
+    hired_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE employee_log (
+    log_id SERIAL PRIMARY KEY,
+    emp_id INT,
+    old_salary NUMERIC,
+    new_salary NUMERIC,
+    changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+--
+CREATE OR REPLACE FUNCTION log_salary_update()
+RETURNS TRIGGER AS 
+$$
+BEGIN
+    INSERT INTO employee_log (emp_id, old_salary, new_salary)
+    VALUES (NEW.id, OLD.salary, NEW.salary);
+    RAISE NOTICE "Trigger name : %", TG_NAME;
+    RETURN NEW;  -- Required to continue the UPDATE operation
+END;
+$$ LANGUAGE plpgsql;
+-- `NEW`: Refers to the new row (after the update).
+-- `OLD`: Refers to the old row (before the update).
+--
+CREATE TRIGGER salary_update_trigger
+AFTER UPDATE OF salary
+ON employees
+FOR EACH ROW
+EXECUTE FUNCTION log_salary_update();
+-- trigger will be fired after the `salary` field of any row in the 
+-- `employees` table is updated. It will insert a record into the 
+-- `employee_log` table with the employee ID, old salary, new salary, and  
+-- timestamp
+```
+
+- `TG_NAME` is used to get the name of trigger inside trigger body.
+- `TG_TABLE_NAME` gives table name on which we are working
+- `TG_OP` gives operation we are performing
+- `TG_WHEN` gives when it is executed
+- `TG_LEVEL` gives is it for row or statement
+- `TG_TABLE_SCHEMA` gives table schema we are working on
+- PostgreSQL temporarily retains the **before-update values** (`OLD`) alongside the **after-update values** (`NEW`) in memory for the trigger to access.
+- View all trigger's in database
+```sql
+SELECT tgname, tgrelid::regclass, tgtype, tgenabled
+FROM pg_trigger;
+```
+- Delete trigger
+```sql
+DROP TRIGGER trigger_name ON table_name;
+```
+ 
+ - Important Considerations :
+	1. **Performance Impact**: Triggers, especially `AFTER` triggers and `FOR EACH ROW` triggers, can impact performance because they add additional operations to each data modification.
+	2. **Error Handling**: If a trigger function raises an exception, the operation (INSERT, UPDATE, DELETE) will be aborted unless you specifically handle the error in the trigger function.
+	3. **Recursion**: Be cautious of recursive triggers, where a trigger causes another trigger to fire. This can lead to infinite loops.
+e.g.
+Let say we want that people should not be abled to update record on weekend.
+```sql
+CREATE OR REPLACE FUNCTION fn_block_weekend_change()
+RETURN TRIGGER
+LANGUAGE plpgsql
+AS
+$$
+BEGIN
+	RAISE NOTICE 'NO database changes allowed on the weekend'
+	RETURN NULL;    -- Required for statement-level triggers
+END
+$$;
+
+CREATE TRIGGER tr_block_weekend_changes
+	BEFORE UPDATE OR INSERT OR DELETE OR TRUNCATE
+	ON employees
+	FOR EACH STATEMENT
+	WHEN(
+		EXTRACT('DOW' FROM CURRENT_TIMESTAMP) BETWEEN 6 AND 7
+	)
+EXECUTE FUNCTION fn_block_weekend_change();
+
+```
 
 
+### 24. Cursors :
+- Cursors are used to step forward or backward through rows of data. 
+- cursors are used to retrieve query results row by row rather than all at once. This is especially useful for handling large datasets where fetching all rows at once could consume too much memory.
+- How they work ? 
+1. **Declare**: Define the cursor with a SQL query.
+```sql
+DECLARE cursor_name [{ FOR | NO SCROLL }] CURSOR(arguments) [{WITH HOLD}] FOR query;
+```
+- `FOR`: Specifies the SQL query whose results the cursor will process.
+- `NO SCROLL`: Prevents backward navigation in the cursor.
+- `WITH HOLD` : Persist after a transaction ends
+- `arguments` are used in cursor query.
+
+2. **Open**: Make the cursor ready for use.
+```sql
+OPEN cursor_name;
+```
+
+3. **Fetch**: Retrieve rows one at a time or in batches.
+```sql
+FETCH [ direction { FROM | IN } ] cursor_name;
+```
+- `direction`:
+	- `NEXT` (default): Fetches the next row.
+	- `PRIOR`: Fetches the previous row.
+	- `FIRST`: Fetches the first row.
+	- `LAST`: Fetches the last row.
+	- `ABSOLUTE n`: Fetches the `n`'th row.
+	- `RELATIVE n`: Fetches `n` rows forward/backward from the current position.
+4. **`MOVE`** command in PostgreSQL is used with cursors to change the cursor's position within the result set without fetching any rows. It is helpful when you want to reposition the cursor for later operations, like `FETCH`, without retrieving data immediately.
+```sql
+MOVE [ direction ] [ FROM | IN ] cursor_name;
+```
+5. **Close**: Close the cursor to release resources.
+```sql
+CLOSE cursor_name;
+```
+
+- Bound Cursor :
+	- A **bound cursor** is tied to a specific query when it is declared.
+	- The query is fixed, and you cannot dynamically change it later.
+- Unbounded Cursor :
+	- An **unbound cursor** does not have a query assigned at the time of declaration.
+	- Instead, you assign a query dynamically using the `OPEN` statement.
+```sql
+-- bounded
+DECLARE bound_cursor SCROLL CURSOR FOR SELECT * FROM employee;
+
+-- unbounded
+DECLARE cursor_name CURSOR WITHOUT QUERY;
+OPEN cursor_name FOR query;
+```
+6. `EXECUTE` over cursor :
+```sql
+OPEN _`unbound_cursorvar`_ [ [ NO ] SCROLL ] FOR EXECUTE _`query_string`_
+                                     [ USING _`expression`_ [, ... ] ];
+
+--
+-- e.g.
+PREPARE dynamic_query AS
+SELECT id, name, salary
+FROM employees
+WHERE salary > $1;
+
+DECLARE emp_cursor CURSOR FOR EXECUTE dynamic_query(55000);
+```
+e.g.
+```sql
+DO
+$body$
+	DECLARE
+		msg text DEFAULT '';
+		rec_customer record;
+		-- Declare cursor with customer data
+		cur_customers CURSOR
+		FOR
+			SELECT * FROM customer;
+	BEGIN
+		-- Open cursor
+		OPEN cur_customers;
+		LOOP
+			-- Fetch records from cursor
+			FETCH cur_customers INTO rec_customer;
+			-- Loop until nothing more is found
+			EXIT WHEN NOT FOUND;
+			-- Concatenates all customer names together
+			msg := msg || rec_customer.first_name || ' ' || rec_customer.last_name || ', ';
+		END LOOP;
+	RAISE NOTICE 'Customers : %', msg;
+	END;
+$body$
+```
+
+- UPDATE and DELETE using cursor :
+	When a cursor is positioned on a table row, that row can be updated or deleted using the cursor to identify the row. There are restrictions on what the cursor's query can be (in particular, no grouping) and it's best to use `FOR UPDATE` in the cursor
+```sql
+UPDATE table_name
+SET column_name = value
+WHERE CURRENT OF cursor_name;
+--
+DELETE FROM table_name
+WHERE CURRENT OF cursor_name;
+```
 
 
-
-
-
-
-
-## Queries : 
+### 25. Miscellaneous : 
 1. ALTER Queries - 
 ```sql
 ALTER TABLE customer
@@ -1150,28 +1682,7 @@ TRUNCATE TABLE table_name;  -- delete all data
 ```sql
 DROP TABLE table_name;
 ```
-7. WHERE :
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 # References
+1. [PostgreSQL official docs](https://www.postgresql.org/docs/ )
+2. [Postgres Tutorial YT](https://youtu.be/85pG_pDkITY?si=0mFdTUjI2Fro3ze1)
