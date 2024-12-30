@@ -6,22 +6,22 @@ kanban-plugin: board
 
 ## DEFINED
 
-- [ ] LeetCode
+- [ ] DBMS
+- [ ] OS
 - [ ] SPRING
 - [ ] JAVA
 - [ ] DSA
 - [ ] CN
-- [ ] OS
 
 
 ## IN PROGRESS
 
-- [ ] DBMS
 
 
 ## DONE
 
 **Complete**
+- [x] LeetCode
 
 
 
