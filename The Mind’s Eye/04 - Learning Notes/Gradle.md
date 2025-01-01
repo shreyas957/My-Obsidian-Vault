@@ -73,6 +73,12 @@ tasks.test {
 - Need java setup
 - Download gradle zip file
 - export path for /bin/
+- To update gradle wrapper specific to project :
+```shell
+./gradlew --version // check current version
+./gradlew wrapper --gradle-version <new_version>
+// now check and buil our project to see everything is fine or not
+```
 
 ### 4. Gradle Project Structure :
 - Support both single-project and multi-project structures.
@@ -111,6 +117,7 @@ tasks.test {
 - `./gradlew tasks --all` : By default only high level task are shown, to see all use this.
 - `./gradlew <task_name>` : run specific task.
 - NOTE : `/` is for Linux and `\` is in windows 
+
 ### 6. How Gradle Works With Java :
 - Compile Java classes
 - Manage resources
@@ -164,6 +171,22 @@ tasks.named<Jar>("jar") {
     manifest {  
         attributes["Main-Class"] = "dev.shreyas.Main"  
     }  
+}
+```
+
+##### 6.2 Java Toolchain :
+Common configuration for JVM (Java) based projects.  
+* This extension is added by the JavaBasePlugin and would be more appropriately named  
+* the JvmPluginExtension extension. It is used to configure many of the project's  
+* JVM-related settings and behavior.
+```kotlin
+java {  
+    toolchain {  
+        languageVersion = JavaLanguageVersion.of(21)   // If we don't have java 21 it will download it and use it  
+        vendor = JvmVendorSpec.ORACLE  
+    }  
+    sourceCompatibility = JavaVersion.VERSION_21  
+    targetCompatibility = JavaVersion.VERSION_21  
 }
 ```
 
@@ -223,6 +246,62 @@ The build task, using task dependencies, makes sure that both assemble and check
 ##### 8.1 Java Plugin Task Graph :
 ![[Java-Plugin-Task-Graph.png]]
 
+### 9. Axion-release-plugin for project versioning :
+[Docs Link](https://github.com/allegro/axion-release-plugin)  (Need to learn correctly)
+```kotlin
+plugins {
+    id("pl.allegro.tech.build.axion-release") version "1.18.7"
+}
+
+version = scmVersion.version
+```
+
+```shell
+$ git tag
+<empty list>
+
+$ ./gradlew currentVersion
+0.1.0-branch-SNAPSHOT
+
+$ ./gradlew release
+
+$ git tag
+v0.1.0
+
+$ ./gradlew cV
+0.1.0
+
+$ git add -A && git commit -m "Updates something" && ./gradlew release
+
+$ git tag
+v0.1.0
+v0.1.1
+
+$ ./gradlew cV
+0.1.1
+```
+Instead of reading project version from buildfile, it is derived from nearest tag in SCM (or set to default if nothing was tagged). If current commit is tagged commit, project has a release version. If there were any commits after last tag, project is in SNAPSHOT version. This very simple and intuitive philosophy, alongside with [Semantic Versioning](http://semver.org/) rules, makes it a lot easier to manage project versions along SCM tag versions.
+
+### 10. Optimizing Repositories :
+Gradle search for the dependencies in the repositories, in numbered way they are declared. Thus to optimize the performance it's important to have correct repository order.
+- This reduces unnecessary network calls, to the repository which does not have our dependency.
+```shell
+./gradlew build --refresh-dependencies --info --scan
+```
+
+### 11. Move Tasks to BuildSrc :
+In this we move our task implementations to build source.
+Build source is a special directory recognized by gradle, where we can put our custom tasks.
+Why?
+- Clean up build script (`build.gradle.kts`)(of specific project)
+- Implementation separated from declaration
+- Can reuse task in other projects build (for multi-project build)
+![[Gradle-BuildSrc.png]]
+[BuildSrc Info](https://handstandsam.com/2018/02/11/kotlin-buildsrc-for-better-gradle-dependency-management/)
+
+
+
+
 
 
 
@@ -232,7 +311,6 @@ The build task, using task dependencies, makes sure that both assemble and check
 2. locate and configure task
 3. running java applications
 4. application vs libraries
-5. java toolchain
 
 
 
