@@ -299,7 +299,12 @@ Why?
 ![[Gradle-BuildSrc.png]]
 [BuildSrc Info](https://handstandsam.com/2018/02/11/kotlin-buildsrc-for-better-gradle-dependency-management/)
 
+### 12. Multi-Module Project
+![[GradleMultiProject.png]]
+The Gradle community has two standards for multi-project build structures:
 
+1. [Multi-Project Builds using buildSrc](https://docs.gradle.org/current/userguide/sharing_build_logic_between_subprojects.html#sec:using_buildsrc)- where `buildSrc` is a subproject-like directory at the Gradle project root containing all the build logic.
+2. [Composite Builds](https://docs.gradle.org/current/userguide/composite_builds.html#composite_builds) - a build that includes other builds where `build-logic` is a build directory at the Gradle project root containing reusable build logic.
 
 
 
@@ -307,7 +312,6 @@ Why?
 
 
 ### Continue Learning :
-1. Other dependency Configurations (`compileOnly`, `runtimeOnly`)
 2. locate and configure task
 3. running java applications
 4. application vs libraries
