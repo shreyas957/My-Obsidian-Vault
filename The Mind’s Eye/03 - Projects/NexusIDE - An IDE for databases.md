@@ -10,7 +10,7 @@ The NexusIDE can be used to interact with PostgreSQL database.
 
 ## What is implemented here?
 1. Spring Boot 3.4.1
-2. Gradle - Kotlin
+2. Gradle - Kotlin DSL
 3. Java Version 21
 4. Swagger documentation
 
@@ -29,6 +29,8 @@ As version one, I want to make a usable editor which will able to connect to db,
 - **User Management**: Manage database users and permissions.
 - **Plugins/Extensions**: Support for adding plugins or extensions.
 - **Data Visualization**: Visualize query results and data trends.
+
+
 
 
 

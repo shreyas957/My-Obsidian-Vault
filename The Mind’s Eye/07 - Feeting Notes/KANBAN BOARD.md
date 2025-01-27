@@ -6,6 +6,7 @@ kanban-plugin: board
 
 ## DEFINED
 
+- [ ] Leetcode
 - [ ] DBMS
 - [ ] OS
 - [ ] SPRING
@@ -21,10 +22,13 @@ kanban-plugin: board
 ## DONE
 
 **Complete**
+
+
+***
+
+## Archive
+
 - [x] LeetCode
-
-
-
 
 %% kanban:settings
 ```
