@@ -1,0 +1,5 @@
+{
+  "catppuccin-tag-styles@@ctp-tag-pill-color": "var(--ctp-flamingo)",
+  "catppuccin-interface-styles@@ctp-bold-folder-title": true,
+  "catppuccin-theme-settings@@catppuccin-theme-accents": "ctp-accent-flamingo"
+}

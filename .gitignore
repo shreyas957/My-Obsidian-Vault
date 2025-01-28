@@ -1,2 +1,2 @@
 # Exclude everything inside the .obsidian folder
-**/The Mind’s Eye/.obsidian
+#**/The Mind’s Eye/.obsidian
