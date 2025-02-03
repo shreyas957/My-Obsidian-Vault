@@ -316,7 +316,7 @@ When nodes or stations are connected and use a common link, we need a multiple-a
 - Error control, encompassing error detection and correction, enables the receiver to notify the sender about lost or damaged frames during transmission, facilitating the coordination for their re-transmission
 - In the data link layer, error control is commonly implemented through the Automatic Repeat Request (ARQ) process, where detected errors trigger the retransmission of specific frames to maintain data integrity.
 
-## 2.4 Sliding window protocol-Flow & Error control
+## 2.4 Sliding window protocol- Flow & Error control
 1. **Stop-and-Wait Automatic repeat request(ARQ)**:
 	- Receiver checks frames; corrupted ones are discarded silently(no ACK sent).
 	- No ACK means sender re-transmits after timeout.
@@ -333,16 +333,119 @@ When nodes or stations are connected and use a common link, we need a multiple-a
 	- $Total time = Tt (data) + Tp (data) + Dealyque + Delaypro + Tt (ack) + Tp (ack) + Dealyque + Delaypro$
 	- Queuing delay and processing delays are generally kept 0. $Total Time = Tt (data) + Tp (data) + Tt (ack) + Tp (ack)$
 	- In general we have taken Tt (ack) as negligible as the ack size is generally very less $Total Time = Tt (data) + Tp (data) + Tp (ack)$
-	- $Total Time = Tt (data) + 2*Tp$  and $2*Tp$ is RTT
+	- $Total Time = Tt (data) + 2*Tp$  and $2*Tp$ is RTT.
+![[stop-wait-arq-protocol-CN.png]]
+
+2. **Go-Back-N ARQ**:
+	- The Stop-and-Wait ARQ method can be inefficient for channels with high bandwidth, resulting in underutilization of the available data pipeline. Solution is Go-Back-N.
+	- To enhance transmission efficiency, the Go-Back-N ARQ protocol allows multiple frames to be transmitted before acknowledgments are received, utilizing a "sliding window" concept.
+	- The send window, an imaginary concept, covers the sequence numbers of frames that can be in transit, having a maximum size of $2^m - 1$. 
+	- Sequence numbers are divided into four regions: the first represents acknowledged frames (no copies kept), the second represents frames sent but with unknown status (outstanding frames), the third denotes frames ready to be sent pending data packets from the network layer, and the fourth signifies sequence numbers inaccessible until the window slides further.
+	- the receive window, with a constant size of one, ensures the receipt of correct data frames and the issuance of appropriate acknowledgments, discarding and necessitating the resending of any out-of-order frames.
+	- Timer: Although there can be a timer for each frame that is sent, in our protocol we use only one. The reason is that the timer for the first outstanding frame always expires first; we send all outstanding frames when this timer expires.
+	![[sliding-window-go-back-n-arq-CN.png]]
+	![[go-back-n-cn.png]]
+	- The receiver sends a positive acknowledgment for frames that arrive intact and in the correct order, whereas it remains silent and discards frames that are damaged or received out of sequence, maintaining a focus on the expected frame's arrival. 
+	- The receiver's silence triggers the timer of the unacknowledged frame at the sender site to expire, prompting the sender to resend all frames from the one with the expired timer.
+	- The receiver can issue a cumulative acknowledgment for multiple frames, enhancing efficiency.
+	- To improve the efficiency of transmission (to fill the pipe), multiple packets must be in transition while the sender is waiting for acknowledgment.
+	- In order to maximize the efficiency, the window size (Ws ) = (1+ 2a). Number of bits required for sequence numbers = ceil ( log2 (1 + 2a))
+3. **Selective Repeat ARQ**:
+	- Go-Back-N ARQ makes it easier for the receiver by only keeping track of one thing and ignoring frames that arrive in the wrong order. However, if the connection is not great, it can waste time and data by having to resend a bunch of frames often.
+	- If the connection is not stable, the Selective Repeat ARQ is better as it only resends the frames that didn't arrive correctly, saving time and data. But, it makes the receiver's job a bit tougher.
+	- The Selective Repeat ARQ also lets the receiver gather frames even if they come in the wrong order and keeps them until they can be arranged correctly and passed on, using equal room for storing and sending frames to work more efficiently.
+	- In Selective Repeat ARQ, the data windows for sending and receiving are kept fairly small to manage data better $2^m-1$; each frame sent has its own countdown timer, making the tracking of requests quite similar to earlier methods but more detailed when data arrives.
+	- When a clear NAK message arrives, we simply send the specific frame again; if a clear ACK message comes, we clear old data, stop the related countdown, and move the window's starting point. If a timeout happens, only the late frame is sent again.
+	![[selective-repeate-arq-cn.png]]
+4. **Piggybacking**: 
+	- **Unidirectional protocols** mainly send data one way, but **ACK/NAK signals** go both ways.
+	- **In practice, data flows bidirectionally**, requiring **piggybacking** to improve efficiency.
+	- **Piggybacking** lets a data frame carry **control info** for the other direction.
+	- Each node has **send & receive windows** and a **timer** managing request, arrival, and timeout.
+	- This makes **arrival handling complex**, requiring a **uniform algorithm** at both sites.
+## 2.5 Types of error
+Data transmitted between nodes can sometimes be altered or corrupted during transmission. This corruption can manifest as either a single-bit error or a burst error.
+a) A single-bit error refers to a scenario where only one bit in a data unit (like a byte or packet) is changed, either from 1 to 0 or vice versa. This type of error is less common.
+b) Burst error, on the other hand, involves the alteration of two or more bits within a data unit. These changes might not be in successive bits. It's a more common error type as noise typically affects a set of bits, the extent of which is influenced by the data rate and noise duration.
+1. **Hamming Distance:**
+	- Hamming distance, represented as d(x, y), is a measure of the difference between two words of equal size, calculated by counting the number of dissimilar bits at the corresponding positions in the two words.
+	- To find the Hamming distance, perform an XOR operation on the two words and count the number of 1s in the outcome.
+	- For instance, the Hamming distance d(000, 011) equals 2, illustrated through the XOR operation: 000 XOR 011 equals 011, which has two 1s.
+2. **Simple parity-check code:**
+	- The simple parity-check code expands a k-bit dataword to an n-bit codeword (n = k + 1), with the additional bit serving as a parity bit to ensure an even total count of 1s in the codeword, though some variations aim for an odd/even count instead.
+	- This code acts as a single-bit error-detecting mechanism, characterized by n = k + 1 and a minimum Hamming distance (dmin) of 2.
+	- It is designed to identify an odd number of errors(for even parity check) within the data transmitted. ![[Simple Parity Check Code.jpeg]]
+	- In the two-dimensional parity check, data words are arranged in a table with rows and columns. A special bit called a parity-check bit is added to each row and column to help identify errors in the data.
+	- After the table is sent, the receiver checks the parity bits for each row and column to find "syndromes", which are indicators of where errors might have occurred.
+	- This method can identify up to three errors in the table, but might miss errors if four or more bits are affected.
+3. **Hamming codes:**
+	- These are error-correcting codes originally designed to detect up to two errors or correct one single error.
+	- The relationship between n and k in a Hamming code. The values of n and k are then calculated from r as $k = 2^r − r − 1$.
+4. **Checksum**:
+	- The checksum method is a way to check for errors when sending a list of numbers over the internet. In this method, we add up all the numbers we want to send and send this total sum, along with the original numbers.
+	- At the receiving end, the numbers are added up again and compared with the received sum. If everything adds up correctly, it means that no errors occurred during transmission. Otherwise, it indicates that there was an error and the data is not accepted.For example, if the set of numbers is (7, 11, 12, 0, 6), we send (7, 11, 12, 0, 6, 36), where 36 is the sum of the original numbers. The receiver adds the five numbers and compares the result with the sum. 
+	- We can make the job of the receiver easier if we send the negative (complement) of the sum, called the checksum. In this case, we send (7, 11, 12, 0, 6, -36). The receiver can add all the numbers received (including the checksum). If the result is 0, it assumes no error; otherwise, there is an error.
+5. **Cyclic Codes**: Cyclic codes are special linear block codes with one extra property. In a cyclic code, if a codeword is cyclically shifted (rotated), the result is another codeword.
+6. **Cyclic redundancy check**:
+	- Sender **divides data by a fixed polynomial**, appends the remainder (CRC checksum).
+	- Receiver **recomputes CRC**; if it matches, data is correct; else, error detected.
+	- Efficient for **detecting burst errors** but **can’t correct errors**, only detect them.
+	- **Widely used** in networks, storage devices, and communication protocols.![[CRC-CN.png]]
+7. **Polynomials:** 
+	- A pattern of 0s and 1s can be represented as a polynomial with coefficients of 0 and 1. The power of each term shows the position of the bit; the coefficient shows the value of the bit. An advantage is that a large binary pattern can be represented by short terms.
+## 2.6 Ethernet
+- Initially utilizing coaxial cables as a shared medium, modern Ethernet variations have adopted twisted pair and fiber optic links, coupled with hubs or switches, to facilitate communication and data transfer within LANs and MANs
+- Over its evolution, Ethernet has boosted data transfer rates from an initial 2.94 Mbit/s to a remarkable 100 Gbit/s, offering several wirings and signaling options as part of the OSI physical layer in sync with Ethernet standards
+- Data is divided into frames with addresses and error checks, enabling damaged frame detection and retransmission.
+- Wi-Fi (IEEE 802.11) is a key wireless alternative to Ethernet in modern LANs.
+- Uses a Bus topology, a shared communication line, optional acknowledgments, and Manchester encoding for data transmission.
+- Standard Ethernet: Connectionless and Unreliable Service:
+	- Each frame sent is independent of the previous or next frame. Ethernet has no connection establishment or connection termination phases. 
+	- Ethernet is also unreliable, if a frame is corrupted during transmission and the receiver finds out about the corruption, the receiver drops the frame silently. 
+	- In case of requirement ack can be sent separately at data packets.
+![[Ethernet-CN.png]]
+1. Preamble:
+	- It is a 7-byte field that contains a pattern of alternating 0’s and 1’s. 
+	- It alerts the stations that a frame is going to start. 
+	- It also enables the sender and receiver to establish bit synchronization. 
+	- The Preamble field is added at the physical layer.
+2. Start Frame Delimiter (SFD):
+	- It is a 1-byte field which is always set to 10101011. 
+	- The last two bits “11” indicate the end of Start Frame Delimiter and marks the beginning of the frame. 
+	- The SFD field is also added at the physical layer. 
+	- Initial only SFD was there Preamble was added later
+3. Destination Address:
+	- It is a 6-byte field that contains the MAC address of the destination for which the data is destined. e.g. 2D : 8A : 7B : C5 
+	- MAC address is present on NIC card. 
+	- MAC address can be of three types 
+		- Unicast-LSB of the first byte is 0 (Source address will always be unicast) 
+		- Multicast- LSB of the first byte is 1, if we want to send, repeated messages to a group of station on the network then we can group these stations together and can assign a Multicast address to the group. 
+		- Broadcast-all bit are assigned 1’s
+4. Source Address: 
+	- It is a 6-byte field that contains the MAC address of the source which is sending the data. 
+	- Using some protocol, we can broadcast a request message asking MAC address of every other station in the network.
+5. Length: 
+	- As ethernet use variable size frames therefore we need Length field.
+	- It is a 16-bit field.
+6. Data: 
+	- It is a variable length field which contains the actual data, also called as a payload field. 
+	- The length of this field lies in the range [46 bytes, 1500 bytes], i.e. in an Ethernet frame, minimum data has to be 46 bytes and maximum data can be 1500 bytes. 
+	- If it is less than 46 bytes, it needs to be padded with extra 0s. 
+	- If more than 1500 bytes, it should be fragmented and encapsulated in more than one frame.
+7. CRC: 
+	- The last field contains error detection information. 
+	- At the time of transmission CRC is calculated so it is in the last. 
+	- It is a 4-Byte field
+## 2.7 Manchester encoding
 
 
-
-
-
-
-
-
-
+# Chapter 3 : Network Layer
+- Source to Destination Delivery: Delivers packets from source to destination, possibly over multiple networks. 
+- Logical Addressing: Uses logical addresses to identify the sender and receiver. 
+- Routing: Responsible for finding the best route to send packets using routing protocols. 
+- Packetizing: Involves encapsulating payload at the source, adding a header with essential details, and preserving payload integrity during transit, barring fragmentation cases. 
+- Error and Flow Control: Encompasses adding a checksum in the datagram header for detecting corruption (not covering the entire datagram), with limited direct involvement in flow control, and using ICMP for some error control activities. 
+- Congestion Control: Manages network congestion, handling situations when too many datagrams crowd a network segment and addressing capacity exceedance issues in networks or routers.
 
 
 
