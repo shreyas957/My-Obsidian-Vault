@@ -436,8 +436,6 @@ b) Burst error, on the other hand, involves the alteration of two or more bits w
 	- The last field contains error detection information. 
 	- At the time of transmission CRC is calculated so it is in the last. 
 	- It is a 4-Byte field
-## 2.7 Manchester encoding
-
 
 # Chapter 3 : Network Layer
 - Source to Destination Delivery: Delivers packets from source to destination, possibly over multiple networks. 
@@ -446,6 +444,119 @@ b) Burst error, on the other hand, involves the alteration of two or more bits w
 - Packetizing: Involves encapsulating payload at the source, adding a header with essential details, and preserving payload integrity during transit, barring fragmentation cases. 
 - Error and Flow Control: Encompasses adding a checksum in the datagram header for detecting corruption (not covering the entire datagram), with limited direct involvement in flow control, and using ICMP for some error control activities. 
 - Congestion Control: Manages network congestion, handling situations when too many datagrams crowd a network segment and addressing capacity exceedance issues in networks or routers.
+## 3.1 Internet protocol - IPv4 
+ IPv4 operates as an unreliable connectionless datagram protocol, offering a best-effort delivery service which doesn't guarantee packet safety or order. 
+-  The "best-effort" notion implies that IPv4 packets might experience corruption, loss, delays, or out-of-order arrival, potentially causing network congestion. 
+- Employing a datagram approach, IPv4 treats each datagram independently, allowing them to traverse different routes to their destination. 	
+- To enhance reliability, IPv4 should be coupled with a reliable protocol like TCP, forming the TCP/IP protocol stack for secured data delivery. ![[IPv4-header-CN.png]]
+- Packets used by the IP are called datagrams. A datagram is a variable-length packet consisting of two parts: header and payload (data). The **header is 20 to 60 bytes in length** and contains information essential to routing and delivery.
+	1. **Version Number**: The 4-bit version number (VER) field defines the version of the IPv4 protocol, which, has the value of 4. (Only hold value 0100 or 0110).
+	2. **Header Length**: The 4-bit header length (HLEN) field defines the total length of the datagram header in 4-byte words. The IPv4 datagram has a variable-length header. 
+	3. **Scaling factor**: To make the value of the header length (number of bytes) fit in a 4-bit header length, the total length of the header is calculated as 4-byte words. The total length is divided by 4 and the value is inserted in the field. The receiver needs to multiply the value of this field by 4 to find the total length. Example: If header length field contains decimal value 5 (represented as 0101), then Header length = 5 x 4 = 20 bytes.
+	4. **Services Type**: IETF has changed the interpretation and name of this 8-bit field. This field, previously called service type, is now called differentiated services. Precedence is a 3-bit subfield ranging from 0 (000 in binary) to 7 (111 in binary). The precedence defines the priority of the datagram in issues such as congestion. If a router is congested and needs to discard some datagrams, those datagrams with lowest precedence are discarded first. ![[Service-type-ipv4-header-cn.png]]
+	5. **TOS bits** is a 4-bit subfield with each bit having a special meaning. Although a bit can be either 0 or 1, one and only one of the bits can have the value of 1 in each datagram. ![[TOS-CN .png]]
+	6.  **Total Length**: It defines the total length (header plus data) of the IP datagram in bytes. This field helps the receiving device to know when the packet has completely arrived. $Length of data = total length − (HLEN) × 4$
+	7. **Identification**: 16-bit identification field identifies a datagram originating from the source host. To guarantee uniqueness, IP protocol uses a counter to label the datagrams. The counter is initialized to a positive number. When the IP protocol sends a datagram, it copies the current value of the counter to the identification field and increments the counter by one. When a datagram is fragmented, the value in the identification field is copied into all fragments, used for the identification of the fragments of an original IP datagram. The identification number helps the destination in reassembling the datagram. 
+	8. **Fragmentation and fragmentation offset**: 
+		1. Fragmentation is a process of dividing the datagram into fragments during its transmission. Datagram can be fragmented by the source host or any router in the path. The reassembly of the datagram, is done only by the destination host, because each fragment becomes an independent datagram. The fragmented datagram can travel through different routes. The bit numbers where the fragmentation is done is used as offset. 
+		2. The 13-bit fragmentation offset field shows the relative position of this fragment with respect to the whole datagram. It is the offset of the data in the original datagram measured in units of 8 bytes. The bytes in the original datagram are numbered 0 to 3999. The first fragment carries bytes 0 to 1399. The offset value => 0/8 = 0. The second fragment carries bytes 1400 to 2799; the offset value => 1400/8 = 175. The third fragment carries bytes 2800 to 3999. The offset value => 2800/8 = 350.
+	9. **Flag field**: 3 Bit flag defines three flags. The leftmost bit is reserved (not used). The second bit (D bit) is called the do not fragment bit. The third bit (M bit) is called the more fragment bit(it means the datagram is not the last fragment; there are more fragments after this one, if 0 means it's last fragment).
+	10. **Time-to-Live(TTL**): 8 Bits. field in a datagram dictates the maximum number of hops (via routers) it can take, generally set to twice the highest number of routers between any two hosts. Every router the datagram passes through decreases the TTL value by one; the datagram is discarded if the TTL reaches zero, preventing it from circulating indefinitely due to potential routing table errors. Besides limiting a datagram's lifespan, the TTL field can be used to restrict a packet's journey deliberately, like confining it to a local network by setting the TTL value to 1, causing its discard at the first router.
+	11. **Protocol**: In TCP/IP, the data section of a packet, called the payload, carries the whole packet from another protocol. A datagram, for example, can carry a packet belonging to any transport-layer protocol such as UDP or TCP. When the datagram arrives at the destination, the value of this field helps to define to which protocol the payload should be delivered.![[IPv4-header-protocolCN.png]]
+	12. **Header Checksum**: The IP header checksum field only verifies the header, not the payload, indicating that IP is not entirely reliable as it doesn't affirm the payload remains unaltered during transmission. Due to alterations in fields such as TTL at every router, the checksum needs frequent recalculations. Upper-level protocols encapsulating data in the IPv4 datagram maintain separate checksums that cover the complete packet, thus the IPv4 datagram checksum doesn't validate the contained data. The IPv4 packet's header, which changes at each visited router (but not the data), is the only section included in the checksum, preventing unnecessary increases in processing time from recalculating the entire packet's checksum at every router
+	13. **Source and Destination Address**: These 32-bit source and destination address fields define the IP address of the source and destination respectively.
+	14. **Variable part**: The variable part comprises the options that can be a maximum of 40 bytes. Options, as the name implies, are not required for a datagram. They can be used for network testing and debugging.
+		1. End of option: An end-of-option option is a 1-byte option used for padding at the end of the option field. It, however, can only be used as the last option.
+		2. Record route: A record route option is used to record the Internet routers that handle the datagram. It can list up to nine router addresses. It can be used for debugging and management purposes.
+		3. Strict Source Route: Strict Source Routing allows the sender to predetermine a specific path for a datagram, ensuring:
+			1. Selection of a route with desired service (e.g., minimum delay, max throughput).
+			2. Avoidance of insecure or competitor networks.
+			3. The datagram must strictly follow the listed routers; deviation leads to discard and error.
+			4. If any listed router is missed, the destination discards it with an error.
+		4. Loose Source Route: A loose source route option is similar to the strict source route, but it is less rigid. Each router in the list must be visited, but the datagram can visit other routers as well.
+		5. Timestamp: A timestamp option is used to record the time of datagram processing by a router. The time is expressed in milliseconds from midnight, Universal time or Greenwich mean time. Knowing the time, a datagram is processed can help users and managers track the behaviour of the routers in the Internet. We can estimate the time it takes for a datagram to go from one router to another. We say estimate because, although all routers may use Universal time, their local clocks may not be synchronized.
+## 3.2 IPv6
+Each packet is divided into two parts. Base header and Payload. The payload is made up of two parts : An optional extension header. The upper layer data. Base header has eight fields![[IPv6-Header-CN.png]]
+1. **Version**: This is 4-bit field which defines the version number of IP. For IPv6, the value is 6.
+2. **Priority**: The 4-bit priority field defines the priority of the packet with respect to traffic congestion.
+3. **Flow label**: The flow label is a 3-byte field that is designed to provide special handling for a particular flow of data.
+4. **Payload length**: The 2-byte payload length field defines the total length of IP datagram excluding the base header.
+5. **Next header**: The next header is an 8-bit field defines the header that follows the base header in the datagram.
+6. **Hop limit**: This 8-bit hop limit field serves the same purpose as TTL field in IPv4.
+7.  **Source address**: The source address field is a 16-bytes internet address that identifies the original source of datagram.
+8. **Destination address**: The destination address field is a 16-byte internet address that usually identifies the final destination of the datagram.
+9. **Extension header**: Extension header field help in processing of data packets by appending different extension header. Each extension header has a length equal to multiple of 64-bits.
+## 3.3 IPv4 vs IPv6
+1. Address Length 
+	1. IPv4: 32-bit (4 bytes) 
+	2. IPv6: 128-bit (16 bytes) 
+2. Address Notation 
+	1. IPv4: Decimal (e.g., 192.168.1.1) 
+	2. IPv6: Hexadecimal (e.g., 2001:0db8:85a3:0000) 		
+3. Number of Addresses 
+	1. IPv4: Approximately 4.3 billion 
+	2. IPv6: Approximately 340 undecillion 
+4. Configuration 
+	1. IPv4: Manual or DHCP 
+	2. IPv6: Stateless address autoconfiguration (SLAAC) or DHCPv6 
+5. Security 
+	1. IPv4: Initially lacked, added later as extensions 
+	2. IPv6: Inbuilt support for IPsec, providing network security at the IP layer
+## 3.4 Advancements in IPv6
+- Larger Address Space: Can accommodate a virtually unlimited number of unique addresses, facilitating the growth of the internet. 
+- Simplified Header: IPv6 has a simpler header structure, which improves the speed of routing by allowing routers to process packets more efficiently. 
+- Improved Multicast: IPv6 utilizes multicast addressing to send data packets to multiple destinations in a single transmission, which conserves bandwidth compared to IPv4. 
+- No NAT Required: IPv6 was designed to eliminate the need for NAT, making end-to-end connection more straightforward and reducing latency and complexity. 
+- Mobility and Security: IPv6 was built considering modern requirements, offering better support for mobile devices and higher levels of security.
+
+## 3.5 Need of Additional protocols 
+- IP packets, however, need to be encapsulated in a frame, which needs physical addresses (node-to-node). We will see that a protocol called ARP, the Address Resolution Protocol. 
+- We sometimes need reverse mapping-mapping a physical address to a logical address. For example, when booting a diskless network or leasing an IP address to a host, RARP is used. 
+- Lack of flow and error control in the Internet Protocol has resulted in another protocol, ICMP, that provides alerts. It reports congestion and some types of errors in the network or destination host 
+- IP was originally designed for unicast delivery, one source to one destination. As the Internet has evolved, the need for multicast delivery, one source to many destinations, has increased tremendously. IGMP gives IP a multicast capability.
+
+## 3.5 Address Resolution Protocol(ARP)  
+- The IP address of the next node alone is not helpful in moving a frame through a link; we need the link-layer address(MAC address) of the next node. 
+- ARP maps an IP address to a logical-link address. ARP accepts an IP address from the IP protocol, maps the address to the corresponding link-layer address, and passes it to the datalink layer. 
+- The ARP protocol is one of the auxiliary protocols defined in the network layer.
+- Anytime a host or a router needs to find the link-layer address of another host or router in its network, it sends an ARP request packet. The packet includes the **link-layer and IP addresses of the sender and the IP address of the receiver.** 
+- Because the sender does not know the linklayer address of the receiver, the query is broadcast over the link.
+- Every host or router on the network receives and processes the ARP request packet, but only the intended recipient recognizes its IP address and sends back an ARP response packet.
+- The response packet contains the recipient’s IP and link-layer addresses. The packet is unicast directly to the node that sent the request packet.
+## 3.6 Reverse Address Resolution Protocol (RARP) 
+- RARP finds the logical address for a machine that knows only its physical address. Each host or router is assigned one or more logical (IP) addresses, which are unique and independent of the physical (hardware) address of the machine. To create an IP datagram, a host or a router needs to know its own IP address.
+- A RARP request is created and broadcast on the local network. Another machine on the local network that knows all the IP addresses will respond with a RARP reply.
+- The requesting machine must be running a RARP client program; the responding machine must be running a RARP server program.
+
+## 3.7 Internet Control Message Protocol(ICMP)
+- The IP protocol has no error-reporting or error-correcting mechanism. The IP protocol also lacks a mechanism for host and management queries. A host sometimes needs to determine if a router or another host is alive. And sometimes a network administrator needs information from another host or router.
+- The ICMP is designed to compensate these. It is companion to the IP protocol.
+- ICMP messages are divided into two broad categories: Error-Reporting messages and query(request & reply) messages. The error-reporting messages report problems that a router or a host (destination) may encounter when it processes an IP packet. The query messages, which occur in pairs, help a host or a network manager get specific information from a router or another host.
+1. **Error Reporting**: ICMP does not correct errors - it simply reports them. Error correction is left to the higher-level protocols. Error messages are always sent to the original source because the only information available in the datagram about the route is the source and destination IP addresses. ICMP uses the source IP address to send the error message to the source (originator) of the datagram. ![[Error-reporting-ICMP-CN.png]]
+	- Time exceeded message : ICMP will take source IP from discarded packet and informs to the source, of discarded datagram due to time to live field reaches to zero, by sending time exceeded message.
+	- Parameter problem: Whenever packets come to the router then calculated header checksum should be equal to received header checksum then only packet is accepted by the router. If there is mismatch packet will be dropped by the router. ICMP will take the source IP from the discarded packet and informs to source by sending parameter problem message.
+	- Destination Un-reachable : Destination unreachable is generated by the host or its inbound gateway to inform the client that the destination is unreachable for some reason. There is no necessary condition that only router give the ICMP error message some time destination host send ICMP error message when any type of failure (link failure, hardware failure, port failure etc.) happen in the network.
+	- Redirection message : Redirect requests data packets be sent on an alternate route. The message informs to a host to update its routing information (to send packets on an alternate route).
+	- Note: 
+		- No ICMP error message will be generated in response to data carrying an ICMP error message.
+		- No ICMP error message will be generated for fragmented datagram that is not the first fragment.
+		- No ICMP error message will be generated for a datagram having multicast address.
+		- No ICMP error message will be generated for datagram having special address such as 127.0.0.0 or 0.0.0.0
+2. **Query(request & reply)**: In addition to error reporting, ICMP can diagnose some network problems. This is accomplished through the query messages, a group of four different pairs of messages. 
+	- In this type of ICMP message, a node sends a message that is answered in a specific format by the destination node. A query message is encapsulated in an IP packet, which in turn is encapsulated in a data link layer frame. ![[ICMP-Query-CN.png]]
+	- Echo Request and Reply: Echo-request and echo-reply messages, encapsulated within IP datagrams, are essential diagnostic tools enabling network managers and users to pinpoint network issues and confirm that IP protocols in sender and receiver systems are in sync. Modern systems offer an advanced version of the ping command, capable of generating a series of these messages, facilitating comprehensive network analysis through the collection of vital statistical data.
+	- Router Solicitation and Advertisement: A host sends a router-solicitation message to discover routers on its network. Routers respond with router-advertisement messages, providing routing information. Routers can also periodically send advertisements to announce their presence and other known routers.
+	- Address-Mask Request and Reply: A host may know its IP address but not its subnet mask. It sends an address-mask-request to a router, either directly or via broadcast. The router replies with an address-mask-reply, providing the subnet mask.
+	- Timestamp Request and Reply: Two machines (hosts or routers) can use the timestamp request and timestamp reply messages to determine the round-trip time needed for an IP datagram to travel between them. It can also be used to synchronize the clocks in two machines.
+
+## 3.8 Internet Group Message Protocol(IGMP)
+- The IP protocol can be involved in two types of communication: unicasting and multicasting. Unicasting is the communication between one sender and one receiver. It is a one-to-one communication. 
+- However, some processes sometimes need to send the same message to a large number of receivers simultaneously. This is called multicasting, which is a one-to-many communication. 
+- Multicasting has many applications. For example, multiple stockbrokers can simultaneously be informed of changes in a stock price, or travel agents can be informed of a plane cancellation.
+
+
+
+
 
 
 

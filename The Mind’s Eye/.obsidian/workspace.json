@@ -78,8 +78,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "481c7481168c45ea",
@@ -169,19 +168,20 @@
   },
   "active": "45ceb2ae3a23c85e",
   "lastOpenFiles": [
+    "05 - Resources/ICMP-Query-CN.png",
+    "05 - Resources/Error-reporting-ICMP-CN.png",
+    "05 - Resources/IPv6-Header-CN.png",
+    "05 - Resources/IPv4-header-protocolCN.png",
+    "04 - Learning Notes/TOS.md",
+    "04 - Learning Notes/CORE CS/Computer Networks.md",
+    "05 - Resources/TOS-CN .png",
+    "05 - Resources/Service-type-ipv4-header-cn.png",
+    "05 - Resources/IPv4-header-CN.png",
     "05 - Resources/Ethernet-CN.png",
     "05 - Resources/CRC-CN.png",
     "05 - Resources/Simple Parity Check Code.jpeg",
     "05 - Resources/selective-repeate-arq-cn.png",
-    "05 - Resources/go-back-n-cn.png",
-    "05 - Resources/window-size-go-back-n-arq-CN.png",
-    "05 - Resources/sliding-window-go-back-n-arq-CN.png",
-    "05 - Resources/stop-wait-arq-protocol-CN.png",
     "04 - Learning Notes/CSMA-CA-CN.md",
-    "04 - Learning Notes/CORE CS/Computer Networks.md",
-    "05 - Resources/CSMA-CA-CN.png",
-    "05 - Resources/CSMA-CA-CN-2.jpeg",
-    "05 - Resources/CSMA-CD-CN.png",
     "04 - Learning Notes/Spring Notes/Introduction To Spring.md",
     "04 - Learning Notes/Spring Notes",
     "Untitled",
