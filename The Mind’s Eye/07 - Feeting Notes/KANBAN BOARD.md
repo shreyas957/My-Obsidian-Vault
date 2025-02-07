@@ -6,22 +6,26 @@ kanban-plugin: board
 
 ## DEFINED
 
-- [ ] Leetcode
+- [ ] CN
+- [ ] SPRING
 - [ ] DBMS
 - [ ] OS
-- [ ] SPRING
+- [ ] Cloud/DevOps
 - [ ] JAVA
-- [ ] DSA
-- [ ] CN
+- [ ] System Design
+	(include all)
+- [ ] Personal Project
 
 
 ## IN PROGRESS
 
+- [ ] DSA
 
 
 ## DONE
 
 **Complete**
+- [x] Leetcode
 
 
 ***
