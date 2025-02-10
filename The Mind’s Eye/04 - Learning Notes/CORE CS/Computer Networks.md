@@ -1,6 +1,6 @@
 2025-01-31 11:26
 
-Status: 
+Status: [[complete]]
 
 Tags: [[CORE CS]]
 
@@ -553,6 +553,429 @@ Each packet is divided into two parts. Base header and Payload. The payload is m
 - The IP protocol can be involved in two types of communication: unicasting and multicasting. Unicasting is the communication between one sender and one receiver. It is a one-to-one communication. 
 - However, some processes sometimes need to send the same message to a large number of receivers simultaneously. This is called multicasting, which is a one-to-many communication. 
 - Multicasting has many applications. For example, multiple stockbrokers can simultaneously be informed of changes in a stock price, or travel agents can be informed of a plane cancellation.
+## 3.9 Congestion
+- Congestion is a situation which may occur if users send data into the network at a rate greater than that allowed by network resources.
+- Congestion control : Congestion control refers to techniques and mechanisms that can either prevent congestion, before it happens, or remove congestion, after it has happened, Techniques used for congestion prevention :
+	1. Open-loop congestion control : In open-loop congestion control, policies are applied to prevent congestion before it happens. In these mechanisms, congestion control is handled by either the source or the destination. Following are the policies that can prevent congestion : 
+		- Retransmission policy : The retransmission policy is designed to optimize efficiency and at the same time prevent congestion. 
+		- Window policy : The type of window at the sender may also affect congestion. The selective repeat window is better than the Go-Back-N window for congestion control. 
+		- Acknowledgement policy : The acknowledgement policy imposed by the receiver may also affect congestion. If the receiver does not acknowledge every packet it receives, it may slow down the sender and help to prevent congestion.
+	2. Closed-loop congestion control : Closed-loop congestion control mechanisms try to reduce congestion after it happens. Several mechanisms have been used by different protocols which are as follows : 
+		- Backpressure : The technique of backpressure refers to mechanism in which a congested node stops congestion control receiving data from the immediate upstream node or nodes. 
+		- Choke packet : A choke packet is a packet sent by a node to the source to inform about congestion. In the choke packet method ,the warning is from the router, which has encountered congestion to the source station directly. 
+		- Implicit signaling : In implicit signaling, there is no communication between the congested node or nodes and the source. 
+		- Explicit signaling : The node that experiences congestion can explicitly send a signal to the source or destination.
+	3. Leaky bucket algorithum:
+		 The **Leaky Bucket Algorithm** is a traffic shaping mechanism used in networking to control data flow. It smooths out bursty traffic by using a **FIFO queue** where packets are added at varying rates but removed at a constant rate. This ensures **consistent output** and prevents network congestion. If the queue is full, incoming packets are dropped.
+	4. Token Bucket Algorithm: 
+		 It is another algorithm used to control data rate in networks. Tokens are added to the bucket at a fixed rate. Data packets can be transmitted if sufficient tokens are available. It allows data to be sent at varying speeds, permitting bursts of data until the bucket is empty of tokens. Offers more flexibility than the leaky bucket as it accommodates bursts of high-speed data without data loss
+
+## 3.10 IPv4 addresses
+The Internet Protocol addresses are **32 bits in length**; this gives us a maximum of 2^(32) addresses. These addresses are referred to as IPv4. This means that, theoretically, if there were no restrictions, more than 4 billion (4,29,49,67,296) devices could be connected to the Internet. The actual number is much less because of the restrictions imposed on the addresses.
+The need for more addresses, in addition to other concerns about the IP layer, motivated a new design of the IP layer called the new generation of IP or IPv6 (lP version 6). In this version, the Internet uses 128-bit addresses that give much greater flexibility in address allocation (3.4 * 10^(38)). These addresses are referred to as IPv6 (IP version 6) addresses.
+- An IP address is uniquely and universally defining the connection of a host or a router to the Internet.
+- They are unique in the sense that each address defines one, and only one, connection to the Internet. Two devices on the Internet can never have the same address at the same time.
+- The IPv4 addresses are universal in the sense that the addressing system must be accepted by any host that wants to be connected to the Internet.
+- The IP address is the address of the connection, not the host or the router, because if the device is moved to another network, the IP address may be changed.
+1. Notions: we can show IPv4 address in two forms, binary notation and dotted decimal notation. ![[IPv4-Addr-CN.png]]
+2. Classful addressing:
+	- IPv4 addressing, at its inception, used the concept of classes. This architecture is called classful addressing.
+	- A 32-bit IPv4 address is hierarchical and divided only into two parts. The first part of the address, called the prefix, defines the network (NetworkID). The second part of the address, called the suffix, defines the node (connection of a device to the Internet (HostID)). ![[IPv4-Classful-addr-CN.png]]
+	- • IPv4 was first designed as a fixed-length prefix and is referred to as classful addressing. In classful addressing, the address space is divided into five classes: **A, B, C, D, and E. Each class occupies some part of the address space.** To accommodate both small and large networks, three fixed-length prefixes were designed (n = 8, n = 16, and n = 24). ![[IPv4-Host-Net-Id-CN.png]]
+
+|**Class**|**Leading Bits**|**Address Range**|**Network Bits**|**Host Bits**|**Total Networks**|**Total Hosts per Network**|**Usable Hosts per Network**|**Purpose**|
+|---|---|---|---|---|---|---|---|---|
+|**A**|**0**|**1.0.0.0 – 126.255.255.255**|8|24|**128** (2⁷)|**16,777,216** (2²⁴)|**16,777,214** (2²⁴-2)|Large ISPs, Big corporations|
+|**B**|**10**|**128.0.0.0 – 191.255.255.255**|16|16|**16,384** (2¹⁴)|**65,536** (2¹⁶)|**65,534** (2¹⁶-2)|Medium to large organizations|
+|**C**|**110**|**192.0.0.0 – 223.255.255.255**|24|8|**2,097,152** (2²¹)|**256** (2⁸)|**254** (2⁸-2)|Small to medium businesses|
+|**D**|**1110**|**224.0.0.0 – 239.255.255.255**|-|-|**N/A**|**N/A**|**N/A**|**Multicast (no hosts or networks assigned)**|
+|**E**|**1111**|**240.0.0.0 – 255.255.255.255**|-|-|**N/A**|**N/A**|**N/A**|**Reserved for future use & research**|
+Class A:
+- Network Bits: 8 (1st octet)
+- Host Bits: 24 (remaining 3 octets)
+- Total Networks: $2^7=128$ (since the first bit is always 0)
+- Total Hosts Per Network: $2^{24}−2=16,777,214$
+- Total Connections: $128×16,777,214=2,147,483,648(≈2.1 billion)$
+(Same with Other classes)
+- All the hosts in a single network always have the same network ID but different Host ID.
+- Two hosts in two different networks can have the same host ID
+- Only those devices which have the network layer will have IP Address, switches, hubs and repeaters does not have any IP Address.
+
+## 3.11 Casting in networks
+Casting in a network is basically of three type: Unicast, Multicast and Broadcast.
+1. Unicast: Transmitting data from one source host to one destination host is called as unicast. It is a one to one transmission.
+2. Broadcast: Transmitting data from one source host to all other hosts residing in a network either same or other network is called as broadcast. It is a one to all transmission.
+	- Limited broadcast: Transmitting data from one source host to all other hosts residing in the same network is called as limited broadcast. Limited Broadcast Address for any network is All 32 bits set to 1 = 11111111.11111111.11111111.11111111 = 255.255.255.255
+	- Direct Broadcast: Transmitting data from one source host to all other hosts residing in some other network is called as direct broadcast. Direct Broadcast Address for any network is the IP Address where, Network ID is the IP Address of the network where all the destination hosts are present and Host ID bits are all set to 1.
+3. Multicast: Transmitting data from one source host to a particular group of hosts having interest in receiving the data is called as multicast. It is a one to many transmissions.
+
+## 3.12 Subnetting
+An organization (or an ISP) that is granted a range of addresses may divide the range into several subranges and assign each subrange to a subnetwork (or subnet). A subnetwork can be divided into several sub-subnetworks. A sub-subnetwork can be divided into several sub-sub-subnetworks, and so on.
+- It improves the security. 
+- The maintenance and administration of subnets is easy
+- But Identification of a station is difficult
+- Not possible to directed broadcast from outside network.
+- Types of subnetting : Fixed length an variable length subnetting
+1. Fixed length subnetting: Fixed length subnetting (classful subnetting) divides the network into subnets such that: 
+	- All the subnets are of same size. 
+	- All the subnets have equal number of hosts. 
+	- All the subnets have same subnet mask. ![[Subnetting-CN-1.png]] ![[Subnetting-CN-2.png]]
+2. Variable length subnetting (classless subnetting): Divides the network into subnets such that:
+	- All the subnets are not of same size. 
+	- All the subnets do not have equal number of hosts. 
+	- All the subnets do not have same subnet mask ![[Subnetting-CN-3.png]]
+- Subnetting increases the number of 1’s in the mask.
+## 3.13 Subnet mask
+In case of subnetting the problem is how to identify to which subnet the incoming packet from outside the network must be delivered. To solve this problem, we use the idea of subnet mask.
+Subnet mask is a 32-bit number which is a sequence of 1’s followed by a sequence of 0’s where:
+- 1’s represents the Network ID part along with the subnet ID.
+- 0’s represents the host ID part.
+Default mask for different classes of IP Address are: 
+- Default subnet mask of Class A = 255.0.0.0 
+- Default subnet mask for Class B = 255.255.0.0 
+- Default subnet mask for Class C = 255.255.255.0
+Networks of same size always have the same subnet mask.
+
+## 3.14 Address Depletion
+- The addresses were not distributed properly as class A and B are usually very large for any organization and class C is usually very small.
+- Flexibility is not there is classful addressing, we cannot have the exact allocation as we want for e.g. if some company wants 150 IP address then must go for 256, resulting into address depletion.
+- Wastage of addresses, for example: Class E addresses were almost never used, wasting the whole class.
+- Conclusion: The Internet was faced with the problem of the addresses being rapidly used up, resulting in no more addresses available for organizations and individuals that needed to be connected to the Internet.
+## 3.15 Classless Addressing(Blocks/Networks)
+Classless Addressing is an improved IP Addressing system. The class privilege is removed from the distribution to compensate for the address depletion, so no class. Here we can ask exact set of IP address which are required and a Variable-length blocks are assigned which satisfy the request.
+1. **CIDR notations**: 
+	The question is as there are no classes, how to identify block id and host id, as address in classless addressing does not define the block or network to which the address belongs.
+	- To solve this problem now we have a new CIDR notation, this notation is informally referred to as slash notation and formally as **classless interdomain routing** or CIDR. e.g. 220.8.24.255/25
+	- The number of addresses in the block is found as $N = 2^{32−n}$ ![[CIDR-CN.png]]
+	- **Address Mask**: The address mask is a 32-bit number in which the n leftmost bits are set to 1s and the rest of the bits (32 − n) are set to 0s. • It is another way to find the first and last addresses in the block.
+		- Using the three bit-wise operations NOT, AND, and OR a computer can find: 
+			1. The number of addresses in the block N = NOT (mask) + 1.
+			2. The first address in the block = (Any address in the block) AND (mask). 
+			3. The last address in the block = (Any address in the block) OR (NOT (mask).
+2. **Rules for Creating CIDR Block (Network)**: 
+	- All the IP Addresses in the CIDR block must be contiguous. 
+	- The size of the block (total number of IP Addresses contained in the block) must be presentable as power of 2, size of any CIDR block will always be in the form 2^1 , 2^2 , 2^3 , 2^4 , 2^5 and so on. (calculation can be easy) 
+	- First IP Address of the block must be divisible by the size of the block. (so that we get the host id from all 0 to all 1) 
+	![[CIDR-Que-CN.png]]
+
+	Q) Consider we have a big single network having IP Address 200.1.2.0/24. We want to do subnetting and divide this network into 3 subnets, such that first contains 126 hosts, and other two contains 62 hosts each?
+
+| Subnet | Broadcast Address     | Network Address | Subnet Mask           | Usable IP Range           | Broadcast Address |
+| ------ | --------------------- | --------------- | --------------------- | ------------------------- | ----------------- |
+| 1st    | **200.1.2.01**111111  | 200.1.2.0       | 255.255.255.128 (/25) | 200.1.2.1 - 200.1.2.126   | 200.1.2.127       |
+| 2nd    | **200.1.2.10**1111111 | 200.1.2.128     | 255.255.255.192 (/26) | 200.1.2.129 - 200.1.2.190 | 200.1.2.191       |
+| 3rd    | **200.1.2.11**1111111 | 200.1.2.192     | 255.255.255.192 (/26) | 200.1.2.193 - 200.1.2.254 | 200.1.2.255       |
+
+3. Designing subnets for CIDR Notations:
+	1. Total Addresses & Prefix Length
+    - **N** = Total addresses assigned to the organization
+    - **n** = Prefix length of the assigned block
+	2. Subnet Calculation
+    - **Nsub** = Number of addresses needed for each subnet (must be a power of 2)
+    - **nsub** = New prefix length for the subnet → 
+	    $nsub=32−log⁡2(Nsub)$
+	3. Subnet Allocation Rules
+    - Assign larger subnets first for better address utilization.
+    - The starting address of each subnet must be divisible by its subnet size.
+	4. Steps to Subnet
+		1. Sort subnet sizes in descending order.
+		2. Allocate the first subnet from the available range.
+		3. Move to the next available address and repeat.
+	This ensures efficient use of IP addresses while following CIDR principles.
+
+## 3.16 Super Netting in Classful addressing
+- In super netting, an organization can combine several blocks to create a larger range of addresses. In other words, several networks are combined to create a super network or a supernet. 
+- An organization can apply for a set of class C blocks instead of just one. For example, an organization that needs 1000 addresses can be granted four contiguous class C blocks. The organization can then use these addresses to create one super network. 
+- Super netting decreases the number of 1’s in the mask
+
+## 3.17 Routing
+When a router receives an IP packet with destination address then how can it decide to which interface the packet must be send. This decision at the router, is taken with the help of a routing table.
+Actually the process of designing a routing table is called routing. Taking a packet and sending it to some path is actually switching.
+- It is possible that a packet reaches its destination without routing table, the process is called **flooding**. instead of trying to identify the shortest path, we can send it to all possible way and then we can be sure that at least one packet will reach the destination
+- A routing table contains information about the network, and it helps deciding to which interface the incoming packet should be sent inorder to reach destination. Routing table can be either static or dynamic.
+- A **static table** is one with manual entries, i.e. if someone has information about all the routers in the network and can compute the shortest distance from one router to another and can upload the routing information in a table for each router then it is called Static Routing.
+- New routes come and old go, internet keeps changing thus, we cant use it.
+- A **dynamic table**, on the other hand, is one that is updated automatically, without human intervention, when there is a change somewhere in the internet either in topology or traffic.
+1. **Unicast routing protocol**: Routing protocols have been created in response to the demand for dynamic routing tables. A routing protocol is a combination of rules and procedures that lets routers in the internet inform each other of changes. It allows routers to share whatever they know about the internet or their neighbourhood.
+2. **Intra-domain and Interdomain Routing**: Today, an internet can be so large that one routing protocol cannot handle the task of updating the routing tables of all routers. For this reason, an internet is divided into autonomous systems.
+	- An **autonomous system (AS)** is a group of networks and routers under the authority of a single administration. Routing inside an autonomous system is referred to as **intradomain routing**.
+	- Each autonomous system can choose one or more intradomain routing protocols to handle routing inside the autonomous system. However, only one interdomain routing protocol handles routing between autonomous systems. ![[Routing-CN.png]]
+3. **Distance Vector Routing [RIP]** :  
+	- In distance vector routing, the **least-cost route between any two nodes is the route with minimum distance**. 
+	- In this protocol, as the name implies, each node maintains a vector (table) of minimum distances to every node. The table at each node also guides the packets to the desired node by showing the next stop in the route (next-hop routing).
+	- The whole idea of distance vector routing is the sharing of information between neighbours. Although node A does not know about node E, node C does. So, if node C shares its routing table with A, node A can also know how to reach node E. ![[Routing-Distance-vector-CN.png]]
+	- As we cant decide how much data to share with neighbour's table, we share entire table thus, and let them decide with part to use and which to discard. We don't share next column.
+	- Periodic updates and triggered updates are used to update the table. Update means when table get data from another table, it updates it's state.
+	- If a link is broken (cost becomes infinity), every other router should be aware of it immediately, but in distance-vector routing, this takes some time as the algorithms is designed in such a way that it reports the minimum first, this problem is referred as **count to infinity**.
+4. **Link state routing [OSPF]**: 
+	- Complete Network Topology: Each node maintains a full map of the network.
+	- Uses Dijkstra's Algorithm: Computes shortest paths based on topology.
+	- Unique Routing Tables: Each node generates its own table using the same topology.
+	- Dynamic Updates: Changes (e.g., link failure) are propagated to all nodes.
+	- Accurate & Efficient: Ensures up-to-date and optimal routing decisions.
+	- Actions to build table: 
+		1. Creation of the states of the links by each node, called the link state packet (LSP). 
+		2. Dissemination of LSPs to every other router, called flooding, in an efficient and reliable way. 
+		3. Formation of a shortest path tree for each node. 
+		4. Calculation of a routing table based on the shortest path tree   
+			![[Routing-Link-State-CN.png]]
+	- The collection of state for all links is called the link-state database (LSDB). There is only one LSDB for the whole internet; each node needs to have a duplicate of it to be able to create the least-cost tree. The LSDB can be represented as a two-dimensional array (matrix) in which the value of each cell defines the cost of the corresponding link.
+
+|Feature|Distance Vector Routing (DVR)|Link State Routing (LSR)|
+|---|---|---|
+|**Information Sharing**|Router shares its knowledge of the whole network with neighbors|Router shares its knowledge of neighbors with the whole network|
+|**Era of Popularity**|1980s|1990s|
+|**Knowledge Type**|Local Knowledge|Global Knowledge|
+|**Bandwidth Requirement**|Low|High|
+|**Algorithm Used**|Bellman-Ford|Dijkstra’s|
+|**Traffic**|Less|High|
+|**Convergence Speed**|Slow|Fast|
+|**Count to Infinity Issue**|Yes|No|
+|**Example Protocols**|RIP|OSPF|
+
+# Chapter 4 : Transport layer
+The network layer is responsible for communication at the computer level (host-to-host communication). A network-layer protocol can deliver the message only to the destination computer.
+However, this is an incomplete delivery, as the message still needs to be handed to the correct process. A transport-layer protocol is responsible for delivery of the message to the appropriate process. TL provides end to end or process to process communication.
+- A transport layer protocol can be either connectionless or connection-oriented.
+- A **connectionless** transport layer treats each segment as an independent packet and delivers it to the transport layer at the destination machine.
+- A **connection-oriented** transport layer makes a connection with the transport layer at the destination machine first before delivering the packets. After all the data is transferred, the connection is terminated.
+- If the application layer program needs reliability, we use a reliable transport layer protocol by implementing flow and error control at the transport layer. This means a slower and more complex service.
+- if the application program does not need reliability because it uses its own flow and error control mechanism or it needs fast service or the nature of the service does not demand flow and error control (real-time applications), then an unreliable protocol can be used.
+- There are three common protocols in transport layer: 
+	1. o TCP and SCTP are connection oriented and reliable. These three can respond to the demands of the application layer programs.
+	2. UDP is connectionless and unreliable.
+	![[Transport-Layer-CN.png]]
+
+## 4.1 Addressing: Port Numbers
+For communication, we must define the local host, local process, remote host, and remote process. Local and Remote host are defined by IP Addresses. To define the processes inside a host, we need second identifiers, called port numbers, they are **16-bits** integers ranging from **(0 to 216 – 1) or (0 to 65535)**.
+- The lANA (Internet Assigned Number Authority) has divided the port numbers into three ranges: well known, registered, and dynamic (or private). 0 - 1023 --> Well Known, 1024 - 49151 --> Registered and 49152 - 65535 --> Dynamic or private. ![[Port-Addressing-CN.png]]
+## 4.2 Socket Addresses
+A transport-layer protocol in the TCP suite needs both the IP address and the port number, at each end, to make a connection. To use the services of the transport layer in the Internet, we need a pair of socket addresses: the client socket address and the server socket address.
+The **combination of an IP address and a port number** is called a socket address.
+IP - 127.23.0.67  and port - 8080
+socket address - 127.23.0.67:8080 
+
+## 4.3 Encapsulation and Decapsulation
+- Encapsulation happens at the sender site. When a process has a message to send, it passes the message to the transport layer along with a pair of socket addresses. The transport layer receives the data and adds the transport-layer header. The packets at the transport layer in the Internet are called segments.
+- Decapsulation happens at the receiver site. When the message arrives at the destination transport layer, the header is dropped and the transport layer delivers the message to the process running at the application layer.
+## 4.4 TCP(transmission control protocol)
+TCP creates a virtual connection between two TCPs to send data. TCP allows the sending process to deliver data as a stream of bytes and allows the receiving process to obtain data as a stream of bytes. TCP creates an environment in which the two processes seem to be connected by an imaginary "tube" that carries their data across the Internet.
+- **Flow Control**: Receiver controls data flow to prevent overload; TCP uses byte-oriented flow control.
+- **Error Control**: Ensures reliability by detecting lost/corrupted segments; operates at the byte level.
+- **Congestion Control**: Regulates data transmission based on network congestion, not just receiver capacity.
+
+1. **TCP Header**: 
+	1. The segment consists of a 20- to 60-byte header, followed by data from the application program. The header is 20 bytes if there are no options and up to 60 bytes if it contains options. ![[TCP-Header-CN.png]]
+		- Here are the key **TCP header fields** in a concise, point-wise format for your notes:
+		- **Source Port (16 bits)**: Identifies the sending port.
+		- **Destination Port (16 bits)**: Identifies the receiving port.
+		- **Sequence Number (32 bits)**: Used for ordering segments and ensuring reliable data transfer.
+		- **Acknowledgment Number (32 bits)**: Indicates the next expected byte from the sender.
+		- **Header Length (HLEN) (4 bits)**: Specifies the size of the TCP header in 32-bit words.
+		- **Reserved (6 bits)**: Reserved for future use; should be set to zero.
+		- **Control Flags (6 bits)**:
+		    - **URG**: Urgent pointer field is valid.
+		    - **ACK**: Acknowledgment field is valid.
+		    - **PSH**: Push function; instructs immediate delivery.
+		    - **RST**: Resets the connection.
+		    - **SYN**: Synchronizes sequence numbers (used in connection establishment).
+		    - **FIN**: Indicates no more data from the sender (used in connection termination).
+		- **Window Size (16 bits)**: Specifies the number of bytes the sender is willing to receive.
+		- **Checksum (16 bits)**: Ensures integrity by detecting errors in the header and data. It also carries for pseudo header(IP).
+		- **Urgent Pointer (16 bits)**: Indicates urgent data if the URG flag is set.
+		- **Options and Padding (up to 40 bytes)**: Used for additional parameters, such as Maximum Segment Size (MSS).
+	2. TCP connection: The connection establishment in TCP is called **three-way handshaking.** The client program issues a request for an **active open**. A client that wishes to connect to an open server tells its TCP to connect to a particular server. TCP can now start the three-way handshaking process. ![[TCP-Three-Way-Handshake-CN.png]]
+		- **SYN + ACK Segment (Server → Client)**:
+		    - Contains **SYN** (synchronize) and **ACK** (acknowledge) flags.
+		    - Initializes the server's sequence number.
+		    - Acknowledges the client's SYN request.
+		    - Does not carry data but consumes one sequence number.
+		- **ACK Segment (Client → Server)**:
+		    - Acknowledges the server's SYN + ACK.
+		    - Uses the **ACK** flag with the expected sequence number.
+		    - Does not consume a sequence number if it carries no data.
+		- **Connection Established**:
+		    - Bidirectional data transfer begins.
+## 4.5 UDP(User Datagram program)
+The User Datagram Protocol (UDP) is a connectionless, unreliable transport protocol. It does not add anything to the services of IP except for providing process-to-process communication instead of host-to-host communication.
+- UDP is a very simple protocol using a minimum of overhead. 
+- If a process wants to send a small message and does not care much about reliability, it can use UDP. 
+- Sending a small message using UDP takes much less interaction between the sender and receiver than using TCP.
+![[UDP-Header-CN.png]]
+- UDP packets, called user datagrams, have a fixed-size header of 8 bytes made of four fields, each of 2 bytes (16 bits). 
+- The first two fields define the source and destination port numbers. 
+- The third field defines the total length of the user datagram, header plus data. 
+- The 16 bits can define a total length of 0 to 65,535 bytes. However, the total length needs to be less because a UDP user datagram is stored in an IP datagram with the total length of 65,535 bytes. 
+- The last field can carry the optional checksum.
+1. UDP Applications:
+	- UDP is suitable for processes with internal flow and error control (e.g., TFTP).
+	- Supports multicasting, unlike TCP.
+	- Used in management protocols like SNMP.
+	- Used in routing protocols like RIP.
+	- Preferred for real-time applications that cannot tolerate delay.
+	- Used in DNS queries.
+## 4.6 TCP vs RTP
+|**S.No.**|**TCP**|**RTP**|
+|---|---|---|
+|1|Stands for Transmission Control Protocol.|Stands for Real-Time Transport Protocol.|
+|2|Lossless protocol.|Stateless protocol.|
+|3|Slower process.|Faster than TCP.|
+|4|Cannot tolerate packet loss.|Can tolerate packet loss.|
+|5|Not used for real-time streaming.|Used for real-time streaming.|
+## 4.7 Data compression
+- **Definition**: Reduces the size of text, audio, and video for efficient storage and transmission.
+- **Components**: Encoder (compresses data) and Decoder (decompresses data).
+- **Types of Compression**:
+    - **Lossless Compression**:
+        - Removes redundant data without loss of information.
+        - Lower compression ratio.
+    - **Lossy Compression**:
+        - Discards some data in a controlled manner.
+        - Irreversible but achieves a higher compression ratio.
+
+## 4.8 Cryptography
+Cryptography is the practice and study of techniques for secure communication in the presence of third parties called adversaries.
+cryptography is about constructing and analysing protocols that prevent third parties or the public from reading private messages; various aspects in information security such as data confidentiality, data integrity, authentication, and non-repudiation are central to modern cryptography.
+1. **Symmetric key**: Symmetric-key cryptography refers to encryption methods in which both the sender and receiver share the same key![[Symmetric-Key-CN.png]]
+  - The **data encryption standard(DES)** is a block cipher that used shared secret encryption. 
+  - DES is based on a symmetric key algorithm that uses a 56-bit key.
+  - DES is basically a mono-alphabetic substitution cipher using a 64-bit character. 
+  - Whenever the same 64-bit plaintext block goes in, the same 64-bit ciphertext block comes out.
+2. **Asymmetric key (Public-key cryptography)**: A public key system is so constructed that calculation of one key (the 'private key') is computationally infeasible from the other (the 'public key'), even though they are necessarily related. Instead, both keys are generated secretly, as an interrelated pair. ![[Asymmetric-Key-CN.png]]
+
+
+# Chapter 5 : Application layer
+The application layer enables the user, whether human or software, to access the network. It provides user interfaces and responsible for providing services to the user, such as electronic mail, FTP, access to system resource, using WWW, network management, etc.
+Communication between two application layers happens over a logical connection. This means both layers act like they're directly connected for message exchange.
+## 5.1 Electronic Mail:
+- Initial Use: Originally for simple text-based communication.
+- Modern Features:
+	- Multimedia: Supports images, audio, and video.
+	- Multiple Recipients: CC & BCC for flexible messaging.
+	- Hyperlinks & HTML: Rich formatting and embedded links.
+	- Encryption & Security: Uses SSL/TLS for secure transmission.
+	- Filters & Folders: Organizes messages efficiently.
+	- Integration: Connects with calendars, task managers, and AI assistants.
+- **Message Transfer Agent(SMTP)**: The actual mail transfer is done through message transfer agents. To send mail, a system must have the client MTA, and to receive mail, a system must have a server MTA. The formal protocol that defines the MTA client and server in the Internet is called the **Simple Mail Transfer Protocol (SMTP)**![[SMTP-CN.png]]
+	- SMTP is used two times, between the sender and the sender's mail server and between the two mail servers
+	- SMTP simply defines how commands and responses must be sent back and forth.
+- **Message Access Agent(POP/IMAP)**:
+	- The first and the second stages of mail delivery use SMTP. However, SMTP is not involved in the third stage because SMTP is a push protocol; it pushes the message from the client to the server.
+	- On the other hand, the third stage needs a pull protocol; the client must pull messages from the server.
+	- Post Office Protocol, version 3 (POP3 ) and Internet Mail Access Protocol, version 4 (IMAP4 ).
+- **POP3**:
+	- Functionality: Simple mail retrieval protocol with limited features.
+	- Client-Server Setup:
+		 - Client software on the recipient’s device.
+		- Server software on the mail server (uses **TCP port 110**).
+	- Mail Retrieval:
+		- User logs in with a username and password.
+		- Mails can be listed and downloaded.
+	- Modes:
+		 - Delete Mode: Mail is removed from the server after retrieval.
+		- Keep Mode: Mail remains on the server for future access.
+	- Usage:
+		- Delete Mode: For primary computers where emails are stored locally.
+		- Keep Mode: For temporary access from another device.
+- **IMAP4**:
+	- Advanced mail access protocol with more features than POP3.
+	- Key Limitations of POP3:
+		- No server-side folder organization.
+		- No preview or partial download options.
+	- IMAP4 Features:
+		- Check email headers before downloading.
+		- Search email content before downloading.
+		- Partially download emails (useful for large multimedia files).
+		- Create, delete, and rename mailboxes on the server.
+		- Organize emails in a hierarchical folder structure.
+- **MIME**: 
+	- Enhances email capabilities beyond basic 7-bit ASCII format.
+	- Limitations of standard email:
+		 - Cannot support non-ASCII languages (e.g., Hindi, Chinese, German).
+		- Cannot send binary files, audio, or video.
+	- MIME Features:
+		- Converts non-ASCII data into ASCII for transmission.
+		- Transforms data back to its original form at the receiver's end.
+## 5.2 File transfer(FTP)
+- Used for uploading and downloading files over the internet.
+- Standard TCP/IP mechanism for file transfer.
+- Handles differences in file naming, text representation, and directory structures.
+- Establishes **two connections** between hosts for efficient data transfer. ![[FTP-CN.png]]
+- Control connection remains open throughout, while the data connection opens and closes per transfer.
+- port 21 for control connection and 20 for data connection is used.
+- Although FTP requires password for connection, the data sent in nit encrypted.
+- To be secure, one can add a Secure Socket Layer between the FTP application layer and the TCP layer. In this case FTP is called **SSL-FTP.**
+## 5.3 Trivial File Transfer Protocol (TFTP)
+TFTP is a simple, UDP-based file transfer protocol that supports only basic read and write operations, typically using port 69, and is often used for booting systems or initial configurations.
+
+## 5.4 World Wide Web(WWW)
+The World Wide Web (WWW) is a repository of information linked together from points all over the world. It a unique combination of flexibility, portability, and user-friendly features that distinguish it from other services provided by the Internet.
+- A system of interlinked hypertext documents accessible via the internet.
+- Uses web browsers to access web pages, which may contain text, images, videos, etc.
+1. **Architecture**: The WWW today is a distributed client server service, in which a client using a browser can access a service using a server. However, the service provided is distributed over many locations called sites. Each site holds one or more documents, referred to as Web pages. Each Web page can contain a link to other pages in the same site or at other sites. The pages can be retrieved and viewed by using browsers.
+## 5.5 Uniform resource locator(URL) 
+- A web page needs a unique identifier to distinguish it.
+- It is defined using four identifiers:
+    1. Protocol – Specifies the client-server application (e.g., HTTP, FTP).
+    2. Host – Can be an IP address or a domain name.
+    3. Port – A 16-bit integer, usually predefined for the application.
+    4. Path – Specifies the location of the resource on the server.
+
+## 5.6 HTTP
+- The Hypertext Transfer Protocol (HTTP) is a protocol used mainly to access data on the World Wide Web. The Hyper Text Transfer Protocol (HTTP) is used to define how the client-server programs can be written to retrieve web pages from the Web. 
+- HTTP uses the services of TCP on well-known port 80, the client uses a temporary port number. 
+- It is a connection-oriented and reliable protocol. 
+- HTTP functions as a combination of FTP and SMTP.
+- It is important to know that HTTP is a stateless protocol, HTTP server does not maintain any state. It forgets about the client after sending the response. It treats every new request independently.
+- HTTP can be run over the Secure Socket Layer (SSL). In this case, HTTP is referred to as HTTPS.
+
+## 5.7 Nonpersistent vs Persistent Connections
+- **Nonpersistent Connection**
+    - A new TCP connection is created for each request-response pair.
+    - Connection closes after the data is transferred.
+    - Causes higher overhead due to multiple connections.
+    - Slower due to repeated connection establishment.
+- **Persistent Connection**
+    - A single TCP connection is kept open for multiple requests/responses.
+    - Reduces latency by avoiding repeated handshakes.
+    - More efficient for multiple transfers.
+    - Used in modern web browsing for better performance.
+
+## 5.8 DNS
+DNS is a hierarchical and distributed system that translates human-readable domain names (e.g., [www.example.com](http://www.example.com/)) into IP addresses required for network communication. It enables users to access websites using easy-to-remember names instead of numeric IP addresses. DNS operates through a network of servers, including **root servers, top-level domain (TLD) servers, and authoritative name servers**. It supports **caching** to improve efficiency and reduce query times. Common DNS record types include **A (IPv4 address), AAAA (IPv6 address), CNAME (alias), and MX (mail exchange)**. DNS plays a crucial role in internet functionality by ensuring seamless navigation and domain resolution. ![[DNS-CN.png]]
+1. **Hierarchy of Name Servers (DNS)**
+- **Root Name Servers**: Contacted when a name server cannot resolve a domain name; directs queries to the appropriate authoritative server.
+- **Top-Level Domain (TLD) Servers**: Handle domains like `.com`, `.org`, `.edu`, and country-specific domains (`.in`, `.uk`); store info on authoritative name servers.
+- **Authoritative Name Servers**: Maintain hostname-to-IP mappings for organizations; return the actual IP address of a requested domain.
+1. Name Space: To be unambiguous, the names must be unique because the addresses are unique. A name space that maps each address to a unique name can be organized in two ways: flat or hierarchical.
+	- Flat name space: In a flat name space, a name is assigned to an address. A name in this space is a sequence of characters without structure. Cant be used for larger systems.
+	- Hierarchical Name Space: In a hierarchical name space, each name is made of several parts. The first part can define the nature of the organization • the second part can define the name of an organization, the third part can define departments in the organization, and so on. ![[DNS-Name-Space-Hierarchical-CN.png]]
+	- Label: Each node in the tree has a label, which is a string with a maximum of 63 characters. • The root label is a null string (empty string). • DNS requires that children of a node (nodes that branch from the same node) have different labels, which guarantees the uniqueness of the domain names.
+## 5.9 Telnet
+Telnet is a text-based protocol used for remote access to servers, operating on TCP port 23 and following a client-server model, but lacks data encryption.
+Largely replaced by more secure alternatives like SSH, Telnet still finds use in legacy systems and specialized applications where high security is not crucial. ![[Telnet-CN.png]]
+
+## 5.10 VoIP
+- VoIP allows for versatile communication, including voice calls and multimedia, over IP networks, offering cost savings and network efficiency. 
+- Relies on a stable internet connection and computer hardware; any disruption can affect the telephone service. 
+- Susceptible to delays, security risks, and challenges in routing emergency calls due to the nature of IP networks.
+
+## 5.11 Remote procedure call
+- Remote Procedure Call (RPC) allows programs to execute procedures (functions) on a remote server, as if they were local, facilitating distributed computing.
+- Operates over various transport protocols such as TCP or HTTP and may include authentication and encryption features for secure communication.
+- Often used in client-server architectures and distributed systems, but can introduce complexities like network latency and failure handling.
+
+## 5.12 Some more info 
+- **Router**: Connects different networks and directs data packets based on IP addresses. Used for internet access and inter-network communication.
+    
+- **Hub**: A basic networking device that broadcasts data to all connected devices without filtering or addressing. Inefficient compared to switches.
+    
+- **Bridge**: Connects and filters traffic between two network segments at the data link layer (Layer 2) based on MAC addresses.
+    
+- **Switch**: A smarter hub that directs data only to the intended device using MAC addresses, improving network efficiency.
+    
+- **Gateway**: Translates data between different network protocols, enabling communication between different network types (e.g., LAN to WAN).
+
 
 
 

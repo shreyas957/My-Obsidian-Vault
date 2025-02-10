@@ -6,7 +6,6 @@ kanban-plugin: board
 
 ## DEFINED
 
-- [ ] CN
 - [ ] SPRING
 - [ ] DBMS
 - [ ] OS
@@ -20,6 +19,7 @@ kanban-plugin: board
 ## IN PROGRESS
 
 - [ ] DSA
+- [ ] CN
 
 
 ## DONE
