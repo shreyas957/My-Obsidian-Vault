@@ -18,7 +18,7 @@ Tags: [[PostgreSQL]] [[CORE CS]]
 Organized collection of structured information. basically they are computer servers where we can store, manipulate and retrieve the data.
 Data is stored in form of rows and columns.
 * Column : Attribute
-* Row : Actual Data*
+* Row : Actual Data
 ---
 ##### SQL : Structured query language
 
@@ -31,6 +31,7 @@ Postgres is actual database engine and SQL is used in it. SQL allow us to intera
 | ----------------- | ------------------ |
 | psql -U <db_name> | connect to databse |
 | \l                | list all databases |
+| \d                | List all relations |
 
 ---
 ### 1.Create AND Insert Into Table
@@ -263,7 +264,7 @@ SELECT CONCAT_WS('-', '2024', '12', '15') AS formatted_date;
 ### 9. AS
 It is used to store result of operation into variable.
 `AS` keyword is used to assign an **alias** to a column or table, making it easier to reference them in the query. Aliases are particularly useful for renaming columns in the result set or simplifying table names in complex queries.
-When using aliases with spaces or special characters, enclose them in double quotes
+When using aliases with spaces or special characters, enclose them in **double quotes**
 
 ### 10. GROUP BY
 `GROUP BY` clause is used to **group rows that have the same values in specified columns** into summary rows, often used with aggregate functions like `COUNT`, `SUM`, `AVG`, `MIN`, or `MAX`. It helps to organize data into groups for performing calculations on each group.
@@ -761,7 +762,7 @@ DROP MATERIALIZED VIEW department_sales;
 	- The view must have exactly one entry in its `FROM` list, which must be a table or another updatable view.
 	- The view definition must not contain `WITH`, `DISTINCT`, `GROUP BY`, `HAVING`, `LIMIT`, or `OFFSET` clauses at the top level.
 	- The view definition must not contain set operations (`UNION`, `INTERSECT` or `EXCEPT`) at the top level.
-	- The view's select list must not contain any aggregates, window functions or set-returning functions. because 
+	- The view's select list must not contain any aggregates, window functions or set-returning functions.
 
 ### 21. SQL Functions
 - Functions are set of SQL statements which performs the action and return the result.

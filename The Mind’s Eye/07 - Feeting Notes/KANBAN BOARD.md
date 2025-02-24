@@ -6,26 +6,32 @@ kanban-plugin: board
 
 ## DEFINED
 
-- [ ] SPRING
-- [ ] DBMS
-- [ ] OS
-- [ ] Cloud/DevOps
 - [ ] JAVA
+- [ ] DBMS - SQL/PSQL
+- [ ] CN
+- [ ] OS
+- [ ] DSA
+- [ ] SPRING
+- [ ] Cloud/DevOps
 - [ ] System Design
 	(include all)
 - [ ] Personal Project
+- [ ] DBMS - Concepts
 
 
 ## IN PROGRESS
 
-- [ ] DSA
-- [ ] CN
+- [ ] Leetcode
 
 
 ## DONE
 
 **Complete**
-- [x] Leetcode
+
+
+## Revision(Notes Completed)
+
+**Complete**
 
 
 ***
@@ -36,6 +42,6 @@ kanban-plugin: board
 
 %% kanban:settings
 ```
-{"kanban-plugin":"board","list-collapse":[false,false,false]}
+{"kanban-plugin":"board","list-collapse":[false,false,false,false]}
 ```
 %%

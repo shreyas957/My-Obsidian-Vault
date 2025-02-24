@@ -1,8 +1,8 @@
 2025-01-01 19:25
 
-Status:
+Status: [[complete]]
 
-Tags:
+Tags: [[Cloud - DevOps]]
 
 
 # Docker
