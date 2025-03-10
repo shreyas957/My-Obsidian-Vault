@@ -1,6 +1,6 @@
 2024-12-30 14:56
 
-Status: [[ongoing]]
+Status: [[archived]]
 
 Tags: [[Project]]
 
