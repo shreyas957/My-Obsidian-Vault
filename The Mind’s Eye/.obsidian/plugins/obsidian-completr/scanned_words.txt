@@ -99,6 +99,12 @@ SOAP
 Send
 Swagger
 Schema
+Servlet
+Synchronous
+Step
+Spins
+Switch
+Saving
 Tags
 Transmission
 Talkie
@@ -301,6 +307,10 @@ Core
 Central
 Connectivity
 Cloudstack
+Containers
+Caller
+Check
+Convention
 Networks
 Network
 No
@@ -407,6 +417,8 @@ Windows
 Works
 Where
 Web
+WAL
+WAR
 is
 internet
 in
@@ -558,6 +570,9 @@ intuitive
 implementations
 identifier
 import
+introduced
+injection
+io
 computer
 connections
 communication
@@ -834,6 +849,12 @@ chunk
 chunks
 constantly
 congest
+comsumption
+complicated
+coupling
+creation
+cycle
+crash
 networks
 network
 nodes
@@ -1035,6 +1056,14 @@ test
 tag
 tagged
 trends
+tight
+thread
+technically
+thinks
+trick
+tags
+trade
+tomcat
 which
 wired
 wireless
@@ -1110,6 +1139,10 @@ wrapper
 wizard
 war
 whatever
+web
+workload
+whoever
+writter
 allows
 and
 access
@@ -1304,6 +1337,12 @@ assemble
 artifacts
 agree
 authorization
+apps
+ad
+annotations
+ans
+ahead
+acceptable
 digital
 devices
 data
@@ -1483,6 +1522,10 @@ depends
 derived
 disconnect
 documentation
+decompress
+disk
+dispatcher
+deploy
 exchange
 each
 efficiency
@@ -1641,6 +1684,10 @@ equivalent
 environment
 everywhere
 editor
+epoll
+excalidraw
+entending
+embedded
 between
 by
 be
@@ -1750,6 +1797,8 @@ bundled
 builds
 bin
 buildfile
+backend
+boot
 other
 or
 of
@@ -1839,6 +1888,7 @@ ownership
 owning
 outputs
 org
+orderly
 using
 usually
 until
@@ -1923,6 +1973,10 @@ unused
 url
 upload
 usable
+unblocks
+uring
+under
+unblock
 share
 sharing
 storage
@@ -2176,6 +2230,14 @@ separated
 subproject
 someone
 schemas
+servlets
+spring
+something
+synchronous
+synchronously
+saved
+secondary
+servlet
 resources
 redundancy
 rules
@@ -2372,6 +2434,11 @@ root
 reusable
 resumable
 really
+responds
+recover
+recent
+replication
+readers
 Goal
 Guided
 Go
@@ -2468,6 +2535,9 @@ Editor
 Export
 Extensions
 Eclipse
+EXCALIDRAW
+Excalidraw
+Embedded
 Resource
 Reliability
 Receiver
@@ -2645,6 +2715,8 @@ Dependencies
 DNS
 Doesn
 DolphinScheduler
+Drawing
+Decompress
 paths
 party
 permanent
@@ -2824,6 +2896,10 @@ philosophy
 parses
 parse
 plugins
+provided
+programming
+parsed
+palette
 fails
 for
 flow
@@ -2931,6 +3007,7 @@ folder
 functionality
 functionalities
 framework
+foundation
 It
 Installation
 If
@@ -3017,6 +3094,9 @@ IDE
 Implementation
 Import
 Interested
+Introduction
+Inversion
+IoC
 via
 vice
 versa
@@ -3189,6 +3269,11 @@ marked
 mutable
 mes
 mark
+manages
+mifos
+meanwhile
+menu
+mvc
 Message
 Multi
 Mesh
@@ -3257,6 +3342,8 @@ Manage
 Module
 Model
 Management
+MVC
+MORE
 Physical
 Protocol
 Performance
@@ -3333,6 +3420,8 @@ Process
 Problem
 Plugins
 Pathfinder
+Pop
+Provides
 One
 Often
 OSI
@@ -3375,6 +3464,8 @@ ON
 Optimizing
 Of
 OpenELIS
+OPTIONS
+Opinionated
 Half
 Here
 Higher
@@ -3615,6 +3706,8 @@ Auth
 Authentication
 Apache
 Airavata
+Asynchronous
+Auto
 half
 has
 hub
@@ -3960,6 +4053,7 @@ UNIQUE
 Unique
 Useful
 Unit
+USE
 Very
 Virtual
 Vulnerable
@@ -4005,6 +4099,7 @@ VCS
 Viewer
 Visualization
 Visualize
+VIEW
 kilometres
 known
 kbps
@@ -4069,6 +4164,7 @@ join
 json
 java
 jar
+jetty
 questions
 queue
 queues
@@ -4095,6 +4191,7 @@ qQh
 question
 quotes
 queried
+quickly
 Kmax
 Knowing
 KG
@@ -4158,6 +4255,7 @@ QV
 QU
 Qd
 QD
+QUEUE
 XOR
 Xd
 XYY
@@ -4236,6 +4334,7 @@ JVM
 JavaBasePlugin
 JvmPluginExtension
 JPF
+JAR
 You
 Yn
 Yp

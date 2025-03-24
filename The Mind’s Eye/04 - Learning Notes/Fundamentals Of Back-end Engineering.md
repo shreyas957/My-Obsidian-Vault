@@ -2,7 +2,7 @@
 
 Status:
 
-Tags:
+Tags: [[CORE CS]]
 
 
 # Fundamentals Of Back-end Engineering
@@ -43,6 +43,75 @@ BODY
 	- Chatting App --> We can try request-response, But I need to make request again and again to check if message is there, which doesn't really work! These empty requests will congest the network.
 	- Very Long requests.
 	- What if client disconnect?.... 
+
+## 2. Synchronous vs Asynchronous   
+(Can I do work while waiting?)
+Synchronous --> Step by step one by one execution 
+Asynchronous --> I'll do something else while waiting for response. 
+1. Synchronous I/O : 
+	- Caller sends requests and blocks. (thus our running process is context switched by another process)
+	- Caller cannot execute any code meanwhile
+	- Receiver responds, caller unblocks
+	- Thus caller ans receiver are in 'sync'
+2. Asynchronous I/O : 
+	- Caller sends a request
+	- Caller can work until it gets a response 
+	- Caller either -> 
+		1. Check if the response is ready (epoll)
+		2. Receiver calls back when its done (io_uring)
+		3. Spins up a new thread that blocks (someone else do it)
+	- Caller and receiver are not in sync
+ 
+3. Asynchronous workload is everywhere -->
+	- **Asynchronous back-end programming**, technically backend thinks someone is waiting for my response right....to the backend whoever called the particular service, it is synchronous, what trick we can do is, **USE of QUEUE's**, If client sends request, will not process it immediately, will put it in queue, and tell to client with response of job-id, client will check the status of request later.
+	-  **Asynchronous commits in postgreSQL**, in postgres, whatever changes we do, read, write, update or delete they are stored in logs as _WAL (write ahead log)_. thus in-case of crash, we can recover the database. We we say commit, postgres will call it synchronously, postgres will only unblock when WAL is saved to disk and return result. In case of _Asynchronous commit_ is an option that allows transactions to complete more quickly, (we return result before even WAL is saved in disk) at the cost that the most recent transactions may be lost if the database should crash. In many applications this is an acceptable trade-off.
+	- Asynchronous replication --> have primary writter and many secondary readers. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
