@@ -50,6 +50,7 @@ Servlet container are the ones which manages the servlets.
 
 
 ## Spring MVC : 
+Spring MVC, as many other web frameworks, is designed around the front controller pattern where a central `Servlet`, the `DispatcherServlet`, provides a shared algorithm for request processing, while actual work is performed by configurable delegate components. This model is flexible and supports diverse workflows.
 ### Inversion of control (IoC):
 -> Before IoC and dependency injection, there was very tight coupling between objects. We needed to manage the objects.
 
