@@ -67,22 +67,93 @@ Asynchronous --> I'll do something else while waiting for response.
 	-  **Asynchronous commits in postgreSQL**, in postgres, whatever changes we do, read, write, update or delete they are stored in logs as _WAL (write ahead log)_. thus in-case of crash, we can recover the database. We we say commit, postgres will call it synchronously, postgres will only unblock when WAL is saved to disk and return result. In case of _Asynchronous commit_ is an option that allows transactions to complete more quickly, (we return result before even WAL is saved in disk) at the cost that the most recent transactions may be lost if the database should crash. In many applications this is an acceptable trade-off.
 	- Asynchronous replication --> have primary writter and many secondary readers. 
 
+## 3. Push: 
+Request/response isn't always ideal....what if?
+- Client wants real time notification from backend.
+- In this use case push model is good such as chatting.
+- Push means if something is available backend push it to client.
+
+1. What is Push?
+	- Client connects to server.
+	- Server sends data to client.
+	- Client doesn't have to request anything.
+	- Protocol must be bi-direction.(uni is also okay)
+	- Used by *RabbitMQ*
+	- It is real time
+	- Con is that Client must be connected to server, Client might not be able to handle, polling is preferred for light clients. 
+	- We can use *WebSockets* for it.  
+
+## 4. Short Polling: 
+(Request is taking a while, I'll check with you later)
+Request/Response isn't ideal when a request takes a long time to process or backend wants to send a notification. 
+Polling is good communication style.
+1. What is short polling?
+	- Clients send request.
+	- Server responds immediately with handle(handle is basically a unique identifier which corresponds to specific request)
+	- Server is free to do something else or process the request.
+	- Client uses that handle to check for status.
+	- multiple "Short" request-response as polls.
+	- Pros: It is simple and good for long running requests. Client can disconnect(persist the handle).
+	- Cons: It's too chatty(many requests), high consumption of network bandwidth and wasted resources.
+
+## 5. Long Polling:
+(Request is taking long, I'll check with you later but talk to me only when it's ready)
+1. What is long polling?
+	- Client sends Request
+	- Server responds immediately with handle
+	- Server Continues to process the request.
+	- Client uses that handle to check for status
+	- *Server does not reply until it has the response(unlike short polling where server responds even though response is not available)*
+	- Kafka uses this
+	- Some variations can have timeouts too.
+	- Not real time.
+
+## 6. Server Sent Events:
+(One request, a very very long response)
+- Server sent events works with request/response.
+- Designed for HTTP, works in web.
+1. What is SSE? 
+	- A response has start and end.
+	- Client sends a Request.
+	- Server sends logical events as a part of response
+	- Server never writes the end of the Response
+	- It is still a request but an unending response.
+	- Client parses the streams data looking for events.
+	- Content type of reques is *text/event-stream*
+	- Pros: It is real time and compatible with req/res.
+	- Cons: Client must be offline, or might not be able to handle.
+	- Cons: HTTP/1.1 problem (6 Connections)
+
+## 7. Publish Subscribe (Pub/Sub):
+(One publisher, many readers)
+- Request/Response is bad for multiple receivers, and has high coupling. 
+- Client/Server has to be running
+- Chaining, circuit breaking
+![[pub-sub.png]]
+- Pros: 
+	- Scales w.r.t multiple receivers
+	- Great for microservices
+	- Loose coupling
+	- Works while clients not running.
+- Cons: 
+	- Message delivery issues(two generals problem)
+	- complexity
+	- Network saturation
 
 
+## 8. Multiplexing vs Demultiplexing: 
+(HTTP/2, QUIC, Connection Pool, MPTCP)
+1. Multiplexing & Demultiplexing: 
+![[Multiplexing-1.png]]
+![[Multiplexing-2.png]]
+![[Demultiplexing.png]]
+- Chrome allows up to 6 connections per domain. other will be blocked.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+2. Connection Pooling: 
+	We establish a number of connections and keep them hot. 
+	Whenever a request comes, use one of the free connection. 
+	- If a new request comes then we make new connection(under limit)
+	- But for new request limit of connection pool is reached, then the request will be blocked, until a connection is free to use. 
 
 
 
