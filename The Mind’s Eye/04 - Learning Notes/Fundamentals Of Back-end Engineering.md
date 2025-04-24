@@ -156,14 +156,68 @@ Polling is good communication style.
 	- But for new request limit of connection pool is reached, then the request will be blocked, until a connection is free to use. 
 
 
+## 9. Stateless VS State-ful:
+(Is state stored in backend?)
+1. Stateful: 
+	- Stores state about clients in it's memory.
+	- Depends on the information being there and relying on it.
+2. Stateless: 
+	- Client is responsible to "transfer the state" with every request.
+	- May store but can safely lose it.
+3. Stateless backend: We store data somewhere else, We can restart backend during idle time while client workflow continues to work.
+	- Backend remians stateless but, system is stateful.  
+4. Stateless and Stateful protocol: The protocols can be designed to store state. *TCP is stateful*. whereas *UDP is stateless*.
+5. We can build stateless protocol on top of stateful and vice versa.
+6. Eg. JWT is stateless. 
+
+## 10. Sidecar pattern:
+(Thick clients, Thicker backends)
+1. Every protocol requires a library, which lives within the app, and when request comes to server the library parses the request and process it through the application. eg. TLS client, gRPC Client. 
+2. Once you use library, our app is entrenched. Both need to be in same language. 
+3. Breaking changes, backward compatibility, etc....
+What is we delegate communication? 
+- Proxy communicate instead
+- Proxy has rich library
+- Client has thin library(e.g. H1)
+- *Each client must have a sidecar proxy*. (Present within same machine)
+![[sidecar-pattern.png]]
+- Now If I want to move to HTTP 3, just change the proxy, no need to client or server side.
+- Example: 
+	1. Service mesh proxies --> Linkerd, Istio, Envoy
+	2. Sidecar proxy container, Must be layer 7 proxy
+1. Pros: 
+	- Language agnostic(polyglot)
+	- Protocol upgarde
+	- security
+	- Tracing and monitoring
+	- Service discovery
+	- Caching 
+2. Cons: 
+	- Complex
+	- latency
 
 
-
-
-
-
-
-
+# Protocols 
+## 1. Protocol properties:
+1. What is a protocol? 
+	- A system that allows two parties to communicate
+	- A protocol is designed with set of properties(rule)
+	- Depending on the purpose of the protocol
+	- TCP, UDP, HTTP, gRPC, FTP, etc.
+2. Properties:
+	- Data format : 
+		- Text (plain, JSON, XML)
+		- Binary(protobuf, RESP, h2, h3)
+	- Transfer mode:
+		- Message based(UDP, HTTP)
+		- Stream(TCP, WebRTC)
+	- Addressing system: DNS, IP, MAC
+	- Directionality: Bidirectional, Unidirectional, Full/Half duplex
+	- State: Stateful and Stateless 
+	- Routing: Proxies, Gateways 
+	- Flow & Congestion control
+	- Error management
+## 2. OSI Model:
 
 
 
