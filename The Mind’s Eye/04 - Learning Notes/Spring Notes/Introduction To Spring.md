@@ -10,7 +10,7 @@ Tags: [[complete]]
 
 
 ## What is Servlet && Servlet Containers: 
-Provides foundation for building we apps.
+Provides foundation for building web apps.
 Servlet is java class which handles client request, process it ad return the response.
 Servlet container are the ones which manages the servlets.
 ```txt
