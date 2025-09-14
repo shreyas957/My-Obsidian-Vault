@@ -120,11 +120,47 @@ This annotation loads a bean if a given **Spring Expression Language (SpEL)** ex
 
 Java
 
-```
+```java
 @Profile({"dev", "test"})
+
+// dev not active
+@Profile("!dev")
+
+// combine multiple profiles 
+@Profile("a & b & c")
+
 ```
 
 This annotation activates beans or configurations only when one of the specified **Spring profiles is active**. It's the standard way to manage **environment-specific configurations** for different stages like `dev`, `test`, or `prod`.
+
+```bash
+-Dspring.profiles.active=dev   // to active profile during application startup via JVM sys parameter
+
+
+// In Unix systems 
+export spring_profiles_active=dev
+```
+
+In maven we do by following - 
+```xml
+<profiles>
+    <profile>
+        <id>dev</id>
+        <activation>
+            <activeByDefault>true</activeByDefault>
+        </activation>
+        <properties>
+            <spring.profiles.active>dev</spring.profiles.active>
+        </properties>
+    </profile>
+    <profile>
+        <id>prod</id>
+        <properties>
+            <spring.profiles.active>prod</spring.profiles.active>
+        </properties>
+    </profile>
+</profiles>
+```
 
 ---
 
