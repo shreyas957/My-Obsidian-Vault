@@ -157,12 +157,13 @@
             "state": {
               "type": "outline",
               "state": {
+                "file": "The Mind’s Eye/04 - Learning Notes/Spring Notes/AOP.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline"
+              "title": "Outline of AOP"
             }
           }
         ],
