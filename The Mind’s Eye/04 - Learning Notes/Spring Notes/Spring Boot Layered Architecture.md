@@ -1,8 +1,8 @@
 2025-03-24 20:01
 
-Status: [[Spring Boot]]
+Status: [[complete]]
 
-Tags: [[complete]]
+Tags: [[Spring Boot]]
 
 
 # Spring Boot Layered Architecture

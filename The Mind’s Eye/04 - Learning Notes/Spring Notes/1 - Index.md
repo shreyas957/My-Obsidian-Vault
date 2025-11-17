@@ -2,7 +2,7 @@
 
 Status: [[complete]]
 
-Tags: [[index]]
+Tags: [[index]] [[Spring Boot]] [[Java]]
 
 
 # Index
@@ -29,6 +29,7 @@ Welcome to the documentation index. Below is a structured overview of all availa
 5. [[Spring Boot Conditional Annotations & Profile (Complete Notes)]]
 6. [[AOP]]
 7. [[Transaction Management (@Transactional)]]
+8. [[Spring Boot Async]]
 
 
 

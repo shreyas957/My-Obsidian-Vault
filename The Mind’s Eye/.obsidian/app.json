@@ -2,5 +2,7 @@
   "promptDelete": false,
   "newFileLocation": "folder",
   "newFileFolderPath": "04 - Learning Notes",
-  "attachmentFolderPath": "05 - Resources"
+  "attachmentFolderPath": "05 - Resources",
+  "defaultViewMode": "source",
+  "focusNewTab": true
 }

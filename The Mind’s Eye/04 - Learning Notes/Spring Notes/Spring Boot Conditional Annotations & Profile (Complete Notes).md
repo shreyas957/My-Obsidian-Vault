@@ -1,8 +1,8 @@
 2025-09-10 20:43
 
-Status: [[Spring Boot]]
+Status: [[complete]]
 
-Tags: [[complete]]
+Tags: [[Spring Boot]]
 
 
 Spring Boot's **conditional annotations** are a powerful mechanism for controlling the creation of beans and configurations based on specific conditions. They are the foundation of auto-configuration, allowing for modular and configurable applications.

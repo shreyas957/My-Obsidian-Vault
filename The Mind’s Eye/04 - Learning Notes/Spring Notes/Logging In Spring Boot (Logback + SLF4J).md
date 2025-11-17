@@ -2,7 +2,7 @@
 
 Status: [[complete]]
 
-Tags: [[Java]] [[Spring Boot]]
+Tags: [[Spring Boot]]
 
 
 # Logging In Spring Boot

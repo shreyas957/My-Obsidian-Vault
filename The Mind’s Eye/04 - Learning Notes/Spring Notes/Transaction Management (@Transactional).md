@@ -1,8 +1,8 @@
 2025-09-15 22:58
 
-Status: [[Spring Boot]]
+Status: [[complete]]
 
-Tags: [[complete]]
+Tags: [[Spring Boot]]
 
 # Transaction Management (@Transactional)
 ## Critical Section: 
