@@ -35,7 +35,29 @@ Java
 ```
 
 This annotation takes a `Class<? extends Condition>`, which must implement the `matches(ConditionContext, AnnotatedTypeMetadata)` method. It runs **custom logic** to decide whether a bean or configuration should load. Use this for advanced conditions that can't be covered by the other annotations, such as checking for file existence or a specific system state.
+```java
+@Bean  
+@Conditional(MyCondition.class)  
+public String mtBean() {  
+    return "Testing conditional annotation";  
+}
 
+class MyCondition implements Condition {  
+    @Override  
+    public boolean matches(
+    ConditionContext context, 
+    AnnotatedTypeMetadata metadata
+    ) {  
+        Environment environment = context.getEnvironment();  
+        String[] activeProfiles = environment.getActiveProfiles();  
+        if (activeProfiles.length == 0) {  
+            return false;  
+        }  
+        String activeProfile = activeProfiles[0];  
+        return activeProfile.equals("Dev");  
+    }  
+}
+```
 ### 2️⃣ `@ConditionalOnProperty`
 
 **Usage:**
@@ -154,7 +176,7 @@ In maven we do by following -
         </properties>
     </profile>
     <profile>
-        <id>prod</id>
+        <id>production</id>
         <properties>
             <spring.profiles.active>prod</spring.profiles.active>
         </properties>

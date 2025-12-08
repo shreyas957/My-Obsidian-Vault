@@ -31,17 +31,13 @@
             }
           },
           {
-            "id": "e3698ab4413a9bbe",
+            "id": "b58452ac166d84af",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "04 - Learning Notes/Spring Notes/Interceptors & Filters.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Interceptors & Filters"
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
             }
           }
         ],
@@ -102,8 +98,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 455,
-    "collapsed": true
+    "width": 455
   },
   "right": {
     "id": "481c7481168c45ea",
@@ -193,20 +188,24 @@
       "obsidian-kanban:Create new board": false
     }
   },
-  "active": "e3698ab4413a9bbe",
+  "active": "b58452ac166d84af",
   "lastOpenFiles": [
-    "05 - Resources/spring-boot-interceptor-filter.png",
-    "04 - Learning Notes/Spring Notes/Interceptors & Filters.md",
     "07 - Feeting Notes/KANBAN BOARD.md",
+    "04 - Learning Notes/Untitled 1.base",
+    "04 - Learning Notes/Untitled.base",
+    "04 - Learning Notes/Untitled 2.base",
     "04 - Learning Notes/Spring Notes/1 - Index.md",
-    "05 - Resources/Routing-Distance-vector-CN.png",
-    "04 - Learning Notes/Spring Notes/Controller Layer Annotations.md",
-    "04 - Learning Notes/Spring Notes/Spring Boot Async.md",
-    "04 - Learning Notes/Spring Notes/Logging In Spring Boot (Logback + SLF4J).md",
-    "04 - Learning Notes/Spring Notes/Introduction To Spring.md",
-    "04 - Learning Notes/Spring Notes/Spring Boot Conditional Annotations & Profile (Complete Notes).md",
-    "04 - Learning Notes/Spring Notes/Spring Boot Layered Architecture.md",
     "04 - Learning Notes/Spring Notes/Transaction Management (@Transactional).md",
+    "04 - Learning Notes/Spring Notes/Spring Boot Conditional Annotations & Profile (Complete Notes).md",
+    "04 - Learning Notes/Spring Notes/Logging In Spring Boot (Logback + SLF4J).md",
+    "04 - Learning Notes/Spring Notes/Controller Layer Annotations.md",
+    "04 - Learning Notes/Spring Notes/Spring Boot Layered Architecture.md",
+    "04 - Learning Notes/Spring Notes/Introduction To Spring.md",
+    "01 - Tags/Spring Boot.md",
+    "04 - Learning Notes/Spring Notes/Interceptors & Filters.md",
+    "05 - Resources/spring-boot-interceptor-filter.png",
+    "05 - Resources/Routing-Distance-vector-CN.png",
+    "04 - Learning Notes/Spring Notes/Spring Boot Async.md",
     "01 - Tags/Statuses/complete.md",
     "05 - Resources/Transactions Managers Spring Boot.png",
     "04 - Learning Notes/System Design/1- Index.md",
@@ -230,7 +229,6 @@
     "05 - Resources/Demultiplexing.png",
     "05 - Resources/Multiplexing-2.png",
     "05 - Resources/Multiplexing-1.png",
-    "04 - Learning Notes/\"Logging.md",
     "04 - Learning Notes/Spring Notes",
     "Untitled"
   ]
