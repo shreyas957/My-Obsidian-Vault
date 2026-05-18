@@ -20,6 +20,9 @@ Here are some best practices that we should follow during a System Design interv
 Solidify the requirements --> Scope the problem --> Engage the interviewer 
 ```
 
+```text
+Ask refining question --> handle the data --> discuss the components --> discuss tradeoffs
+```
 ## 2. Present High-Level Design(HLD):
 At a high level, components could be frontend, load balancers, caches, data processing, and so on. The System Design explains how these components fit together.
 An architectural design often represents components as boxes. The arrows between these boxes represent who talks to whom and how the boxes or components fit together collectively.

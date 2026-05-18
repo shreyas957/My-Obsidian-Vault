@@ -31,17 +31,37 @@
             }
           },
           {
-            "id": "b58452ac166d84af",
+            "id": "6afa24a52e148b69",
+            "type": "leaf",
+            "pinned": true,
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "04 - Learning Notes/Spring Notes/Spring HATEOAS.md",
+                "mode": "source",
+                "source": false
+              },
+              "pinned": true,
+              "icon": "lucide-file",
+              "title": "Spring HATEOAS"
+            }
+          },
+          {
+            "id": "6befd10df7fb6d07",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Graph view"
+              "type": "markdown",
+              "state": {
+                "file": "04 - Learning Notes/System Design/CAP Theorem.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "CAP Theorem"
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -178,6 +198,7 @@
   },
   "left-ribbon": {
     "hiddenItems": {
+      "share-to-notionnext:Share to NotionNext": false,
       "bases:Create new base": false,
       "switcher:Open quick switcher": false,
       "graph:Open graph view": false,
@@ -188,15 +209,24 @@
       "obsidian-kanban:Create new board": false
     }
   },
-  "active": "b58452ac166d84af",
+  "active": "6befd10df7fb6d07",
   "lastOpenFiles": [
+    "05 - Resources/CAP-Theorem-1.png",
+    "04 - Learning Notes/System Design/CAP Theorem.md",
+    "04 - Learning Notes/System Design/1- Index.md",
+    "04 - Learning Notes/Spring Notes/Spring Boot Conditional Annotations & Profile (Complete Notes).md",
     "07 - Feeting Notes/KANBAN BOARD.md",
-    "04 - Learning Notes/Untitled 1.base",
+    "04 - Learning Notes/Spring Notes/Spring HATEOAS.md",
+    "05 - Resources/Hateoas-ex2.png",
     "04 - Learning Notes/Untitled.base",
+    "04 - Learning Notes/Spring Notes/AOP.md",
+    "05 - Resources/Hateoas-ex1.png",
+    "05 - Resources/Hateoas-ex1.png",
+    "04 - Learning Notes/System Design/Getting Ready for the System Design Interview.md",
+    "04 - Learning Notes/Untitled 1.base",
     "04 - Learning Notes/Untitled 2.base",
     "04 - Learning Notes/Spring Notes/1 - Index.md",
     "04 - Learning Notes/Spring Notes/Transaction Management (@Transactional).md",
-    "04 - Learning Notes/Spring Notes/Spring Boot Conditional Annotations & Profile (Complete Notes).md",
     "04 - Learning Notes/Spring Notes/Logging In Spring Boot (Logback + SLF4J).md",
     "04 - Learning Notes/Spring Notes/Controller Layer Annotations.md",
     "04 - Learning Notes/Spring Notes/Spring Boot Layered Architecture.md",
@@ -208,13 +238,8 @@
     "04 - Learning Notes/Spring Notes/Spring Boot Async.md",
     "01 - Tags/Statuses/complete.md",
     "05 - Resources/Transactions Managers Spring Boot.png",
-    "04 - Learning Notes/System Design/1- Index.md",
-    "04 - Learning Notes/Spring Notes/AOP.md",
     "05 - Resources/fundamentals of sys design.png",
-    "05 - Resources/CAP-Theorem-1.png",
     "05 - Resources/CAP-Theorame-2.png",
-    "04 - Learning Notes/System Design/Getting Ready for the System Design Interview.md",
-    "04 - Learning Notes/System Design/CAP Theorem.md",
     "04 - Learning Notes/System Design",
     "04 - Learning Notes/MongoDB Notes.md",
     "01 - Tags/System Design.md",
@@ -224,11 +249,7 @@
     "03 - Projects/NexusIDE - An IDE for databases.md",
     "03 - Projects/My Portfolio Website + Blog Site.md",
     "04 - Learning Notes/Fundamentals Of Back-end Engineering.md",
-    "04 - Learning Notes/CORE CS/Computer Networks.md",
     "05 - Resources/sidecar-pattern.png",
-    "05 - Resources/Demultiplexing.png",
-    "05 - Resources/Multiplexing-2.png",
-    "05 - Resources/Multiplexing-1.png",
     "04 - Learning Notes/Spring Notes",
     "Untitled"
   ]
